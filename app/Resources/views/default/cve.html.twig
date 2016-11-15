@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block header_content %}
+    {% embed ":default:header.html.twig" %}
+    {% endembed %}
+{% endblock %}
+
+{% block main_content %}
+     <div class="row">
+        <div class="col-sm-8 col-sm-offset-2">
+            <cvelist></cvelist>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/cve/cvelist.tag', { 'data': {{ cvelist }} }) }}" type="riot/tag"></script>
+
+    <script type="text/javascript">
+        riot.mount('*');
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+{% endblock %}
