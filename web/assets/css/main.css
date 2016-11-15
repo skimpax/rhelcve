@@ -1,0 +1,11 @@
+
+.panel-heading span {
+	margin-top: -20px;
+	font-size: 15px;
+}
+
+.project-title,
+.project-subtitle {
+	color: #337ab7;
+	display: inline;
+}

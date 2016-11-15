@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
+{% block header_content %}
+    {% embed ":default:header.html.twig" %}
+    {% endembed %}
+{% endblock %}
+
+{% block main_content %}
     <div id="wrapper">
         <div id="container">
             <div id="welcome">

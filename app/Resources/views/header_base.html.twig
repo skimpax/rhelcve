@@ -1,0 +1,41 @@
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">
+                <img alt="Potato" src="{{ asset('assets/images/logo.png') }}">
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+{#             {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                {% block navbar_content %}{% endblock %}
+                <p class="navbar-text navbar-right">Username: <a href="#" class="navbar-link">{{ app.user.username }}</a></p>
+            {% else %}
+                <p class="navbar-text navbar-right">Not logged in</p>
+            {% endif %} #}
+
+            {% block navbar_content %}{% endblock %}
+
+            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                <p class="navbar-text navbar-right">
+                    {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+                    <a href="{{ path('fos_user_security_logout') }}">
+                        {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                    </a>
+                </p>
+{#             {% else %}
+                <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a> #}
+            {% else %}
+                <p class="navbar-text navbar-right">Not logged in</p>
+            {% endif %}
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>

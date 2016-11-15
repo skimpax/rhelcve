@@ -2,12 +2,30 @@
 <html>
     <head>
         <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        <title>{% block title %}RHEL CVE Triage{% endblock %}</title>
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}" />
+        <link rel="stylesheet" href="{{ asset('assets/css/font-awesome.min.css') }}" />
+
+        {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <div class="container">
+            {% block header_content %}{% endblock %}
+
+            {% block main_content %}{% endblock %}
+            
+            {% block footer_content %}{% endblock %}
+        </div>
+
+        <script src="{{ asset('assets/js/jquery-3.1.1.min.js') }}"></script>
+        <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('assets/js/riot+compiler.min.js') }}"></script>
+
         {% block javascripts %}{% endblock %}
     </body>
 </html>
