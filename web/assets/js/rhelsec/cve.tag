@@ -1,9 +1,9 @@
 <cvrf>
-    <h3 class="text-primary">CVRF for Triage</h3>
+    <h3 class="text-primary">CVE for Triage</h3>
 
     <div>
         <h4>Request Criteria  <small>in RHEL security DB</small></h4>
-        <form class="form-inline">
+        <form id="myform1" class="form-inline" onsubmit={ doRhelGrab }>
             <label for="basic-url">Since Date:</label>
             <div class="input-group date" data-provide="datepicker">
                 <input type="text" class="form-control">
@@ -11,17 +11,13 @@
                     <span class="glyphicon glyphicon-th"></span>
                 </div>
             </div>
-<!--             <div class="form-group">
-                <label for="exampleInputName2">Criticity</label>
-                <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
-            </div> -->
             <label for="exampleInputName2">Severity</label>
             <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button id="severity" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Level <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Critical</a></li>
+                    <li class="active"><a href="#">Critical</a></li>
                     <li><a href="#">Important</a></li>
                     <li><a href="#">Moderate</a></li>
                     <li><a href="#">Low</a></li>
@@ -99,9 +95,36 @@
             // return jsonlink;
         }
 
-        doApiRequest = function() {
+        doRhelGrab = function() {
 
-            $.getJSON("/api/cvrf", function(results) {
+            console.log("XXXXXXXXXX");
+
+            var x = document.getElementById("myForm1").elements
+            for (elem in x) {
+                console.log(elem);
+            }
+
+            var startDate = document.getElementById("dateFrom").value; 
+            var severity = document.getElementById("severity").value;
+
+            var criteria = "";
+            criteria.concat("after=", startDate);
+            criteria.concat("severity=", severity);
+
+            console.log("start: ", startDate);
+            console.log("severity: ", severity);
+            console.log("criteria: ", criteria);
+
+            doApiRequest(criteria);
+        }
+
+        doApiRequest = function(criteria = null) {
+            var url = "/api/cvrf";
+            if (criteria !== null && !criteria.empty()) {
+                url += criteria;
+            }
+
+            $.getJSON(url, function(results) {
                 console.log(results);
                 self.items = results.data;
             })

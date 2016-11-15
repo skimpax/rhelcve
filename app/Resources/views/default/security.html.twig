@@ -5,21 +5,27 @@
     {% endembed %}
 {% endblock %}
 
-{% block main_content %}
-    <div class="row">
-        <div class="col-sm-8 col-sm-offset-2">
-            <cvrf></cvrf>
-        </div>
-    </div>
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datepicker3.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/datatables.min.css') }}" />
 {% endblock %}
 
+
+{% block main_content %}
+    {# <div class="row"> #}
+        <cvrf></cvrf>
+    {# </div> #}
+{% endblock %}
+
+
 {% block javascripts %}
-    <script src="{{ asset('assets/js/rhelsec/cvrf.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datatables.min.js') }}"></script>
+
+    <script src="{{ asset('assets/js/rhelsec/cve.tag') }}" type="riot/tag"></script>
 
     <script type="text/javascript">
         riot.mount('*');
     </script>
-{% endblock %}
-
-{% block stylesheets %}
 {% endblock %}
