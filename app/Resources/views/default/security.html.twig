@@ -6,15 +6,15 @@
 {% endblock %}
 
 {% block main_content %}
-     <div class="row">
+    <div class="row">
         <div class="col-sm-8 col-sm-offset-2">
-            <cvelist></cvelist>
-        </div>
+
+        <cvfr></cvrf>
     </div>
 {% endblock %}
 
 {% block javascripts %}
-    <script src="{{ asset('assets/js/cve/cvelist.tag', { 'data': {{ cvelist }} }) }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/js/rhelsec/cvrf.tag') }}" type="riot/tag"></script>
 
     <script type="text/javascript">
         riot.mount('*');

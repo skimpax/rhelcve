@@ -9,6 +9,8 @@ use Lsw\ApiCallerBundle\Call\HttpGetJson;
 
 class DefaultController extends Controller
 {
+    const BASEURL = 'https://access.redhat.com/labs/securitydataapi';
+
     /**
      * @Route("/", name="homepage")
      */
@@ -17,54 +19,75 @@ class DefaultController extends Controller
         // replace this example code with whatever you need
         return $this->render('default/index.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-        ]);
+            ]);
     }
 
     /**
-     * @Route("/cve", name="cve")
+     * @Route("/rhelsec/cvrf", name="rhelsec_cvrf")
+     */
+    public function getCvrfAction(Request $request)
+    {
+        $url = self::BASEURL . '/cvrf.json';
+        $url .= '?after=2016-11-10';
+        $params = array();
+
+        $json = $this->container->get('api_caller')->call(
+            new HttpGetJson(
+                $url,
+                $params
+            )
+        );
+        print_r($json);
+
+        return $this->render('default/security.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            'data' => $json
+            ]);
+    }
+
+    /**
+     * @Route("/rhelsec/cve", name="rhelsec_cve")
      */
     public function getCveAction(Request $request)
     {
-        // $data = [];
-
-        // $arrayToPost = array(
-        //     'ip_address' => array(
-        //         'name' => 'IpName',
-        //         'hostname' => 'HostName',
-        //         'ip' => '192.168.0.1',
-        //         'throttling_template' => array(
-        //             'name' => 'Throttling Template'
-        //         )
-        //     )
-        // ); // this will be json_encode. If you don't want to json_encode, use HttpPostJson instead of HttpPostJsonBody
-        // $output = $this->get('api_caller')->call(new HttpPostJsonBody($url, $arrayToPost, true, $parameters)); // true to have an associative array as answer
-
-
-$url = 'https://access.redhat.com/labs/securitydataapi';
-$url .= '/cvrf.json'
-$url .= '?after=2016-11-10'
-$data = array();
-$returnAssociativeArray = true;
-
-//add curl options
-// $options = array(
-//     'userpwd' => 'demo:privateKey'
-//     'httpheader' => array('Content-type' => 'application/json')
-// );
-
+        $url = self::BASEURL . '/cve.json';
+        $url .= '?after=2016-11-10';
+        $params = array();
 
         $json = $this->container->get('api_caller')->call(
-                    new HttpPostJson(
-                        $url,
-                        $data,
-                        // $returnAssociativeArray,
-                        // $options
-                    )
-                );
+            new HttpGetJson(
+                $url,
+                $params
+            )
+        );
+        print_r($json);
 
-        return $this->render('default/cve.html.twig', [
+        return $this->render('default/security.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
-            'allcve' => json_decode($json)
-        ]);
+            'data' => $json
+            ]);
+    }
+
+        /**
+     * @Route("/rhelsec/oval", name="rhelsec_oval")
+     */
+    public function getOvalAction(Request $request)
+    {
+        $url = self::BASEURL . '/oval.json';
+        $url .= '?after=2016-11-10';
+        $params = array();
+
+        $json = $this->container->get('api_caller')->call(
+            new HttpGetJson(
+                $url,
+                $params
+            )
+        );
+        print_r($json);
+
+        return $this->render('default/security.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            'data' => $json
+            ]);
     }
 }
