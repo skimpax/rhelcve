@@ -10,9 +10,8 @@
     <div class="alert alert-warning" if={ error }>{ error }</div>
 
     <div if={ isLoading == false } >
-        <if cond={ results.length }>
-            <then>
-            <h4>Activity Types Details</h4>
+        <div if={ items.length }>
+            <h4>CVRF Details</h4>
             <table class="table">
                 <thead>
                     <tr>
@@ -25,9 +24,10 @@
                     </tr>
                 </tbody>
             </table>
-        <else>
-            <div class="alert alert-info">No activity type created yet. You can create one using dedicated button.</div>
-        </else>
+        </div>
+        <div if={ items.length == 0 }>
+            <div class="alert alert-info">No CVRF emitted.</div>
+        </div>
     </div>
 
 

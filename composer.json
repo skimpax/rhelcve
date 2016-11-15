@@ -2,6 +2,9 @@
     "name": "chris/rhelcve",
     "license": "proprietary",
     "type": "project",
+    "config": {
+        "process-timeout": 900
+    },
     "autoload": {
         "psr-4": {
             "": "src/"
