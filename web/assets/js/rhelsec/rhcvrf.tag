@@ -1,31 +1,26 @@
-<cvrf>
-    <h3 class="text-primary">CVRF for Triage</h3>
+<rhcvrf>
+    <h3 class="text-primary">CVE List</h3>
 
     <div>
         <h4>Request Criteria  <small>in RHEL security DB</small></h4>
-        <form class="form-inline">
-            <label for="basic-url">Since Date:</label>
-            <div class="input-group date" data-provide="datepicker">
-                <input type="text" class="form-control">
-                <div class="input-group-addon">
-                    <span class="glyphicon glyphicon-th"></span>
+        <form id="myform1" class="form-inline" onsubmit={ doRhelGrab }>
+            <div class="form-group">
+                <label for="iddateafter">Since Date:</label>
+                <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                    <input id="dateafter" type="text" class="form-control" name="after" required>
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
                 </div>
             </div>
-<!--             <div class="form-group">
-                <label for="exampleInputName2">Criticity</label>
-                <input type="text" class="form-control" id="exampleInputName2" placeholder="Jane Doe">
-            </div> -->
-            <label for="exampleInputName2">Severity</label>
-            <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Level <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Critical</a></li>
-                    <li><a href="#">Important</a></li>
-                    <li><a href="#">Moderate</a></li>
-                    <li><a href="#">Low</a></li>
-                </ul>
+            <div class="form-group">
+                <label for="idseverity">Severity:</label>
+                <select id="idseverity" class="form-control" name="severity" required>
+                    <option value="critical">Critical</option>
+                    <option value="important">Important</option>
+                    <option value="moderate">Moderate</option>
+                    <option value="low">Low</option>
+                </select>
             </div>
             <button type="submit" class="btn btn-success">Apply</button>
         </form>
@@ -99,9 +94,36 @@
             // return jsonlink;
         }
 
-        doApiRequest = function() {
+        doRhelGrab = function() {
 
-            $.getJSON("/api/cvrf", function(results) {
+            console.log("XXXXXXXXXX");
+
+            var queryparams = $('#myform1').serialize();
+            console.log(queryparams);
+
+            // var fdata = $('#myform1').serializeArray().reduce(function(obj, item) {
+            //     // transfor 'Critical' to 'critical' to match RHEL API
+            //     obj[item.name] = item.value.toLowerCase();
+            //     return obj;
+            // }, {});
+            // console.log(fdata);
+
+
+            doApiRequest(queryparams);
+        }
+
+        doApiRequest = function(criteria = null) {
+            var apiurl = "/api/cvrf";
+            if (criteria !== null && !criteria.empty()) {
+                apiurl += "?";
+                apiurl += criteria;
+            }
+
+            self.isLoading = true;
+            self.update();
+            console.log(apiurl);
+
+            $.getJSON(apiurl, function(results) {
                 console.log(results);
                 self.items = results.data;
             })
@@ -122,11 +144,14 @@
 
         self.on('mount', function(){
 
-            $('.datepicker').datepicker();
+            $('.datepicker').datepicker({
+                format: 'yyyy/mm/dd',
+                startDate: '-1m'
+            });
 
             doApiRequest();
         })
 
     </script>
 
-</cvrf>
+</rhcvrf>
