@@ -2,7 +2,7 @@
     <h3 class="text-primary">CVRF List</h3>
 
     <div>
-        <h4>Request Criteria  <small>in RHEL security DB</small></h4>
+        <h4>Search Criteria  <small>in Red Hat security DB</small></h4>
         <form id="myform1" class="form-inline" onsubmit={ doRhelGrab } action="#">
             <div class="form-group">
                 <label for="iddateafter">Since Date:</label>
@@ -28,9 +28,9 @@
 
     <hr>
 
-    <div if={ isLoading } class='loader center-block'>
+    <div if={ isLoading } class='loader center'>
         <!-- <img src='puff.svg' /> -->
-        <i class="fa fa-spinner fa-spin" style="font-size:24px"></i>
+        <i class="fa fa-spinner fa-spin" style="font-size:36px"></i>
     </div>
 
     <div class="alert alert-warning" if={ error }>{ error }</div>
@@ -41,7 +41,7 @@
             <table id="cvrftable" class="table table-striped table-bordered" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Index</th>
+                        <!-- <th>Index</th> -->
                         <th>Released On</th>
                         <th>RHSA</th>
                         <th>Severity</th>
@@ -51,7 +51,7 @@
                 </thead>
                 <tfoot>
                     <tr>
-                        <th>Index</th>
+                        <!-- <th>Index</th> -->
                         <th>Released On</th>
                         <th>RHSA</th>
                         <th>Severity</th>
@@ -61,7 +61,7 @@
                 </tfoot>
                 <tbody>
                     <tr each="{ value, i in items }">
-                        <td>#{ i }</td>
+                        <!-- <td>#{ i }</td> -->
                         <td>{ value.released_on }</td>
                         <td>{ value.RHSA }</td>
                         <td>{ value.severity }</td>
@@ -110,10 +110,9 @@
 
             self.isLoading = true;
             self.update();
-            console.log(apiurl);
 
             $.getJSON(apiurl, function(results) {
-                console.log(results);
+                // console.log(results);
                 self.items = results.data;
             })
             .done(function() {

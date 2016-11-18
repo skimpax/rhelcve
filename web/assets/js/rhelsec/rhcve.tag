@@ -2,7 +2,7 @@
     <h3 class="text-primary">CVE List</h3>
 
     <div>
-        <h4>Request Criteria  <small>in RHEL security DB</small></h4>
+        <h4>Search Criteria  <small>in Red Hat security DB</small></h4>
         <form id="myform1" class="form-inline" onsubmit={ doRhelGrab }>
             <div class="form-group">
                 <label for="iddateafter">Since Date:</label>
@@ -41,7 +41,7 @@
             <table id="cvrftable" class="table table-striped table-bordered" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <th>Index</th>
+                        <!-- <th>Index</th> -->
                         <th>Public Date</th>
                         <th>CVE</th>
                         <th>Severity</th>
@@ -51,7 +51,7 @@
                 </thead>
                 <tfoot>
                     <tr>
-                        <th>Index</th>
+                        <!-- <th>Index</th> -->
                         <th>Public Date</th>
                         <th>CVE</th>
                         <th>Severity</th>
@@ -61,7 +61,7 @@
                 </tfoot>
                 <tbody>
                     <tr each="{ value, i in items }">
-                        <td>#{ i }</td>
+                        <!-- <td>#{ i }</td> -->
                         <td>{ value.public_date }</td>
                         <td>{ value.CVE }</td>
                         <td>{ value.severity }</td>
@@ -110,10 +110,9 @@
 
             self.isLoading = true;
             self.update();
-            console.log(apiurl);
 
             $.getJSON(apiurl, function(results) {
-                console.log(results);
+                // console.log(results);
                 self.items = results.data;
             })
             .done(function() {
