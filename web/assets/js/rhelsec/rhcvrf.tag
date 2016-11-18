@@ -1,9 +1,9 @@
 <rhcvrf>
-    <h3 class="text-primary">CVE List</h3>
+    <h3 class="text-primary">CVRF List</h3>
 
     <div>
         <h4>Request Criteria  <small>in RHEL security DB</small></h4>
-        <form id="myform1" class="form-inline" onsubmit={ doRhelGrab }>
+        <form id="myform1" class="form-inline" onsubmit={ doRhelGrab } action="#">
             <div class="form-group">
                 <label for="iddateafter">Since Date:</label>
                 <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
@@ -72,51 +72,40 @@
             </table>
 
         </div>
-        <div if={ items.length == 0 }>
+        <div if={ items == null || items.length == 0 }>
             <div class="alert alert-info">No CVRF emitted.</div>
         </div>
     </div>
 
 
-    <script type="text/javascript">
+    <script>
 
         this.items = [];
-        this.isLoading = true;
+        this.isLoading = false;
         this.error = null;
 
         var self = this
 
-        convert2htmllink = function(jsonlink) {
+        convert2htmllink(jsonlink) {
 
             // https://access.redhat.com/documentation/en/red-hat-security-data-api/version-0.1/red-hat-security-data-api/
             // remove '.json' in URL to get link hat will return data in plain HTML 
-            return jsonlink.replace(/\.json$/, "");
-            // return jsonlink;
+            return jsonlink.replace(/\.json$/, ".xml");
         }
 
-        doRhelGrab = function() {
-
-            console.log("XXXXXXXXXX");
+        doRhelGrab() {
 
             var queryparams = $('#myform1').serialize();
-            console.log(queryparams);
+            // console.log(queryparams);
 
-            // var fdata = $('#myform1').serializeArray().reduce(function(obj, item) {
-            //     // transfor 'Critical' to 'critical' to match RHEL API
-            //     obj[item.name] = item.value.toLowerCase();
-            //     return obj;
-            // }, {});
-            // console.log(fdata);
-
-
-            doApiRequest(queryparams);
+            this.doApiRequest(queryparams);
         }
 
-        doApiRequest = function(criteria = null) {
+        doApiRequest(criteria = null) {
+
             var apiurl = "/api/cvrf";
-            if (criteria !== null && !criteria.empty()) {
-                apiurl += "?";
-                apiurl += criteria;
+            if (criteria !== null && 0 !== criteria.length) {
+                apiurl += "?" + criteria;
             }
 
             self.isLoading = true;
@@ -149,7 +138,7 @@
                 startDate: '-1m'
             });
 
-            doApiRequest();
+            // doApiRequest();
         })
 
     </script>

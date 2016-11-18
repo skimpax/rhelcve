@@ -20,19 +20,8 @@ class ApiController extends Controller
     public function getCvrfAction(Request $request)
     {
         $url = self::BASEURL . '/cvrf.json';
-        $qs = $request->getQueryString();
-        if ($qs != null) {
-            $url .= '?';
-            $url .= $qs;
-        }
-        $logger = $this->get('logger');
-        $logger->warn($url);
-        if ($request->query->get('after')) {
-            $logger->warn($request->query->get('after'));
-            $logger->warn($request->query->get('severity'));
-        }
 
-        $params = array();
+        $params = $this->extractQueryParamsArray($request);
 
         $jsonrepr = $this->container->get('api_caller')->call(
             new HttpGetJson(
@@ -52,12 +41,7 @@ class ApiController extends Controller
     {
         $url = self::BASEURL . '/cve.json';
 
-        $qs = $request->getQueryString();
-        if ($qs != null) {
-            $url .= '?';
-            $url .= $qs;
-        }
-        $params = array();
+        $params = $this->extractQueryParamsArray($request);
 
         $jsonrepr = $this->container->get('api_caller')->call(
             new HttpGetJson(
@@ -76,12 +60,8 @@ class ApiController extends Controller
     public function getOvalAction(Request $request)
     {
         $url = self::BASEURL . '/oval.json';
-        $qs = $request->getQueryString();
-        if ($qs != null) {
-            $url .= '?';
-            $url .= $qs;
-        }
-        $params = array();
+
+        $params = $this->extractQueryParamsArray($request);
 
         $jsonrepr = $this->container->get('api_caller')->call(
             new HttpGetJson(
@@ -91,5 +71,14 @@ class ApiController extends Controller
         );
 
         return new JsonResponse(['data' => $jsonrepr]);
+    }
+
+    private function extractQueryParamsArray(Request $request)
+    {
+        $qpstring = $request->getQueryString();
+        $qparray = [];
+        parse_str($qpstring, $qparray);
+
+        return $qparray;
     }
 }
