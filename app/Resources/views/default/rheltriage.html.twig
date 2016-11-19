@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block header_content %}
+    {% embed ":default:header.html.twig" %}
+    {% endembed %}
+{% endblock %}
+
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datepicker3.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/datatables.min.css') }}" />
+{% endblock %}
+
+
+{% block main_content %}
+    <div class="row">
+        <div class="col-md-10">
+            <h3 class="text-primary">RHEL Triage - <span class="small">in RHEL security DB</span></h3>
+        </div>
+    </div>
+
+    <rheltriage></rheltriage>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datatables.min.js') }}"></script>
+
+    <script src="{{ asset('assets/js/rhelsec/rheltriage.tag') }}" type="riot/tag"></script>
+
+    <script type="text/javascript">
+        riot.mount('rheltriage');
+    </script>
+{% endblock %}

@@ -4,8 +4,8 @@
 {% block navbar_content %}
     {# {% if is_granted('IS_AUTHENTICATED_FULLY') %} #}
         <ul class="nav navbar-nav">
-            <li class="active"><a href="#">RH Search<span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Triage</a></li>
+            <li class="active"><a href="{{ path('homepage') }}">RedHat Search<span class="sr-only">(current)</span></a></li>
+            <li><a href="{{ path('rhel_triage_page') }}">RHEL Triage</a></li>
         </ul>
     {# {% endif %} #}
 {% endblock %}
