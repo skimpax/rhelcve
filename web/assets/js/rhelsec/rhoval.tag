@@ -73,7 +73,7 @@
 
         </div>
         <div if={ items == null || items.length == 0 }>
-            <div class="alert alert-info">No CVRF emitted.</div>
+            <div class="alert alert-info">No OVAL emitted.</div>
         </div>
     </div>
 
@@ -103,7 +103,7 @@
 
         doApiRequest(criteria = null) {
 
-            var apiurl = "/api/oval";
+            var apiurl = "/api/rhdb/oval";
             if (criteria !== null && 0 !== criteria.length) {
                 apiurl += "?" + criteria;
             }

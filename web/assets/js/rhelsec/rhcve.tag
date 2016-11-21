@@ -103,7 +103,7 @@
 
         doApiRequest(criteria = null) {
 
-            var apiurl = "/api/cve";
+            var apiurl = "/api/rhdb/cve";
             if (criteria !== null && 0 !== criteria.length) {
                 apiurl += "?" + criteria;
             }

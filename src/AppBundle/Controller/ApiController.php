@@ -35,6 +35,35 @@ class ApiController extends Controller
     }
 
     /**
+     * @Route("/api/rhdb/cvrf/{rhsa}", name="api_rhdb_cvrf_details", 
+     * requirements={"rhsa": "RH[BES]A-\d{4}:\d{4}"})
+     * @Method({"GET"})
+     */
+    public function getCvrfDetailsAction(Request $request, $rhsa)
+    {
+        $logger = $this->get('logger');
+
+        $params = array();
+        $url = self::BASEURL . "/cvrf/" . $rhsa . ".json";
+
+        $jsonrepr = $this->container->get('api_caller')->call(
+            new HttpGetJson(
+                $url,
+                $params
+            )
+        );
+
+        //$arr = json_decode(json_encode($jsonrepr), true);
+        //$logger->error($arr);
+        $data = [
+        'rhlink' => $url,
+        'data' => $jsonrepr
+        ];
+
+        return new JsonResponse(['data' => $data]);
+    }
+
+    /**
      * @Route("/api/rhdb/cve", name="api_rhdb_cve")
      * @Method({"GET"})
      */
@@ -78,6 +107,8 @@ class ApiController extends Controller
     {
         $params = array();
 
+        $logger = $this->get('logger');
+
         $intercept_params = [ 'rhelversion'];
         $allparams = $this->extractRhDbQueryParamsArray($request);
 
@@ -85,6 +116,10 @@ class ApiController extends Controller
         $severity = $request->query->get('severity');
         if ($severity != null) {
             $params['severity'] = $severity;
+        }
+        $after = $request->query->get('after');
+        if ($after != null) {
+            $params['after'] = $after;
         }
 
         $jsonrepr = $this->container->get('api_caller')->call(
@@ -97,15 +132,18 @@ class ApiController extends Controller
         // build list of all RHSA found out by CSRF criteria
         $allRhsa = array();
         foreach ($jsonrepr as $key => $value) {
-            $allRhsa[] = $value['RHSA'];
+            $arr = (array)$value;
+            $logger->error("******** " . $key);
+            $logger->error($arr['RHSA']);
+            $allRhsa[] = $arr['RHSA'];
         }
 
         $params = array();
-        $filteredRhsa = array();
-        $results = array()
+        $filteredRhsaIds = array();
+        $allRhsaData = array();
         foreach ($allRhsa as $key => $rhsa) {
             // retrieve info for that specific RHSA
-            $url = self::URL_CVRF . "/" . $rhsa . ".json";
+            $url = self::BASEURL . "/cvrf/" . $rhsa . ".json";
             $jsonrepr = $this->container->get('api_caller')->call(
                 new HttpGetJson(
                     $url,
@@ -113,18 +151,45 @@ class ApiController extends Controller
                 )
             );
             // append result
-            $results[] = $jsonrepr;
+            // convert object to true array
+            $arr = json_decode(json_encode($jsonrepr), true);
+            $allRhsaData[$rhsa] = $arr;
 
             //
-            foreach ($jsonrepr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
-                if ($prodbranch['type'] === 'Product Family' && strpos($prodbranch['name'], 'Red Hat Enterprise Linux') !== null) {
-                    if (gettype($prodbranch['branch']) === "array") {
-                        // TODO
-                    } else {
-                        foreach ($prodbranch['branch'] as $key => $prod) {
-                            if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== null && strpos($prod['full_product_name'], '(v. 7)') !== null) {
-                                $filteredRhsa[] = $rhsa;
+            if (isset($arr['cvrfdoc']['product_tree'])) {
+                foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
+                    if ($prodbranch['type'] === 'Product Family' && strpos($prodbranch['name'], 'Red Hat Enterprise Linux') !== null) {
+                        if (gettype($prodbranch['branch']) === "array") {
+                            // TODO
+                        } else {
+                            foreach ($prodbranch['branch'] as $key => $prod) {
+                                if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== null && strpos($prod['full_product_name'], '(v. 7)') !== null) {
+                                    $filteredRhsaIds[] = $rhsa;
+                                }
                             }
+                        }
+                    }
+                }
+            }
+        }
+
+        $results = array();
+        foreach ($filteredRhsaIds as $key => $rhsa) {
+            $rhsadata = $allRhsaData[$rhsa];
+            $resdata = array();
+            $resdata['RHSA'] = $rhsa;
+            if (isset($rhsadata['cvrfdoc']['product_tree'])) {
+                 foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
+                    if ($prodbranch['type'] === 'Product Version') {
+                        if (gettype($prodbranch['branch']) === "array") {
+                            // TODO
+                        } else {
+                            $resdata['packages'][] = $prodbranch['name'];
+                            // foreach ($prodbranch['branch'] as $key => $prod) {
+                            //     if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== null && strpos($prod['full_product_name'], '(v. 7)') !== null) {
+                            //         $filteredRhsaIds[] = $rhsa;
+                            //     }
+                            // }
                         }
                     }
                 }

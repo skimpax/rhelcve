@@ -28,7 +28,7 @@
 
     <hr>
 
-    <div if={ isLoading } class='loader center'>
+    <div if={ isLoading } class='loader center-block'>
         <!-- <img src='puff.svg' /> -->
         <i class="fa fa-spinner fa-spin" style="font-size:36px"></i>
     </div>
@@ -66,7 +66,8 @@
                         <td>{ value.RHSA }</td>
                         <td>{ value.severity }</td>
                         <td>{ value.released_packages }</td>
-                        <td><a href="{ convert2htmllink(value.resource_url) }">link</a></td>
+                        <!-- <td><a href="{ convert2htmllink(value.resource_url) }">link</a></td> -->
+                        <td><a href="{ convert2htmllinkXXX(value.RHSA) }">link</a></td>
                     </tr>
                 </tbody>
             </table>
@@ -76,7 +77,6 @@
             <div class="alert alert-info">No CVRF emitted.</div>
         </div>
     </div>
-
 
     <script>
 
@@ -93,6 +93,14 @@
             return jsonlink.replace(/\.json$/, ".xml");
         }
 
+        convert2htmllinkXXX(rhsa) {
+
+            // https://access.redhat.com/documentation/en/red-hat-security-data-api/version-0.1/red-hat-security-data-api/
+            // remove '.json' in URL to get link hat will return data in plain HTML 
+            //return jsonlink.replace(/\.json$/, ".xml");
+            return '/rhdb/cvrfdetails/' + rhsa;
+        }
+
         doRhelGrab() {
 
             var queryparams = $('#myform1').serialize();
@@ -103,7 +111,7 @@
 
         doApiRequest(criteria = null) {
 
-            var apiurl = "/api/cvrf";
+            var apiurl = "/api/rhdb/cvrf";
             if (criteria !== null && 0 !== criteria.length) {
                 apiurl += "?" + criteria;
             }
@@ -112,8 +120,8 @@
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                // console.log(results);
                 self.items = results.data;
+                console.log(results.data);
             })
             .done(function() {
             // alert( "second success" );
