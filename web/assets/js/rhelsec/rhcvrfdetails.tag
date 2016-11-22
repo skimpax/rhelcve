@@ -1,4 +1,5 @@
 <rhcvrfdetails>
+    <hr>
     <div if={ isLoading } class='loader center-block'>
         <!-- <img src='puff.svg' /> -->
         <i class="fa fa-spinner fa-spin" style="font-size:36px"></i>
@@ -8,61 +9,42 @@
 
     <div if={ isLoading == false } >
 
-        <h5>RH Direct Link: <a href="{ rhdirectlink }">{ rhdirectlink }</a></h5>
-        <pre id="json">{ prettyjson }</pre>  
+        <h5 if={ rhdirectlink != null }>RH Direct Link: <a href="{ rhdirectlink }">{ rhdirectlink }</a></h5>
+        <pre if={ prettyjson != null } id="json">{ prettyjson }</pre>  
 
-        <div if={ items == null || items.length == 0 }>
-            <div class="alert alert-info">No CVRF emitted.</div>
+        <div if={ prettyjson == null || prettyjson.length == 0 }>
+            <div class="alert alert-info">No data retrieved.</div>
         </div>
     </div>
 
     <script>
 
-        this.items = [];
+        this.rhdirectlink = null;
+        this.prettyjson = null;
         this.isLoading = false;
         this.error = null;
 
         var self = this
 
-        convert2htmllink(jsonlink) {
-
-            // https://access.redhat.com/documentation/en/red-hat-security-data-api/version-0.1/red-hat-security-data-api/
-            // remove '.json' in URL to get link hat will return data in plain HTML 
-            return jsonlink.replace(/\.json$/, ".xml");
-        }
-
-        convert2htmllinkXXX(rhsa) {
-
-            // https://access.redhat.com/documentation/en/red-hat-security-data-api/version-0.1/red-hat-security-data-api/
-            // remove '.json' in URL to get link hat will return data in plain HTML 
-            //return jsonlink.replace(/\.json$/, ".xml");
-            return '/rhdb/cvrfdetails/' + rhsa;
-        }
-
-        doRhelGrab() {
-
-            var queryparams = $('#myform1').serialize();
-            // console.log(queryparams);
-
-            this.doApiRequest(queryparams);
-        }
-
         doApiRequest(rhsa) {
 
             var apiurl = "/api/rhdb/cvrf/" + rhsa;
 
+            self.rhdirectlink = null;
+            self.prettyjson = null;
             self.isLoading = true;
+            self.error = null;
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                self.items = results.data;
-                console.log(results.data);
-                // document.getElementById("json").innerHTML = JSON.stringify(results.data.data, undefined, 2);
-                self.rhdirectlink = results.data.rhlink;
-                self.prettyjson = JSON.stringify(results.data.data, undefined, 2);
+                //console.log(results.data);
+                if (results.data !== null) {
+                    self.rhdirectlink = results.data.rhlink;
+                    self.prettyjson = JSON.stringify(results.data.jsondata, undefined, 2);
+                }
             })
             .done(function() {
-            // alert( "second success" );
+                // alert( "second success" );
             })
             .fail(function() {
                 // alert( "error" );
