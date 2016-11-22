@@ -7,29 +7,28 @@
 
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/css/datatables.min.css') }}" />
 {% endblock %}
 
 
 {% block main_content %}
     <div class="row">
         <div class="col-md-10">
-            <h3 class="text-primary">Details for {{ rhsa }}</h3>
+            <h3 class="text-primary">Details of {{ rhsa }}</h3>
         </div>
     </div>
 
     <rhcvrfdetails></rhcvrfdetails>
 
+    <scrolltotop></scrolltotop>
 {% endblock %}
 
 
 {% block javascripts %}
-    <script src="{{ asset('assets/js/datatables.min.js') }}"></script>
-
-
     <script src="{{ asset('assets/js/rhelsec/rhcvrfdetails.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/js/rhelsec/scrolltotop.tag') }}" type="riot/tag"></script>
 
     <script type="text/javascript">
         riot.mount('rhcvrfdetails', { rhsa: "{{ rhsa }}" });
+        riot.mount('scrolltotop');
     </script>
 {% endblock %}

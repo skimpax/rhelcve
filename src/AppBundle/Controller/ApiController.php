@@ -53,12 +53,13 @@ class ApiController extends Controller
             )
         );
 
-        //$arr = json_decode(json_encode($jsonrepr), true);
-        //$logger->error($arr);
-        $data = [
-        'rhlink' => $url,
-        'data' => $jsonrepr
-        ];
+        $data = array();
+        if ($jsonrepr !== null) {
+            $data = [
+            'rhlink' => $url,
+            'jsondata' => $jsonrepr
+            ];
+        }
 
         return new JsonResponse(['data' => $data]);
     }
@@ -128,6 +129,9 @@ class ApiController extends Controller
                 $params
             )
         );
+        if ($jsonrepr === null) {
+            return new JsonResponse(['data' => []]);
+        }
 
         // build list of all RHSA found out by CSRF criteria
         $allRhsa = array();
@@ -150,21 +154,26 @@ class ApiController extends Controller
                     $params
                 )
             );
-            // append result
-            // convert object to true array
-            $arr = json_decode(json_encode($jsonrepr), true);
-            $allRhsaData[$rhsa] = $arr;
+            if ($jsonrepr !== null) {
+                // append result
+                // convert object to true array
+                $arr = json_decode(json_encode($jsonrepr), true);
+                $allRhsaData[$rhsa] = $arr;
 
-            //
-            if (isset($arr['cvrfdoc']['product_tree'])) {
-                foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
-                    if ($prodbranch['type'] === 'Product Family' && strpos($prodbranch['name'], 'Red Hat Enterprise Linux') !== null) {
-                        if (gettype($prodbranch['branch']) === "array") {
-                            // TODO
-                        } else {
-                            foreach ($prodbranch['branch'] as $key => $prod) {
-                                if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== null && strpos($prod['full_product_name'], '(v. 7)') !== null) {
-                                    $filteredRhsaIds[] = $rhsa;
+                //
+                if (isset($arr['cvrfdoc']['product_tree'])) {
+                    foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
+                        if ($prodbranch['type'] === 'Product Family' && strpos($prodbranch['name'], 'Red Hat Enterprise Linux') !== null) {
+                            if (gettype($prodbranch['branch']) === "array") {
+                                // TODO
+                                $logger->error("YYYYY: ");
+                            } else {
+                                $logger->error("XXXXXX: ");
+
+                                foreach ($prodbranch['branch'] as $key => $prod) {
+                                    if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== null && strpos($prod['full_product_name'], '(v. 7)') !== null) {
+                                        $filteredRhsaIds[] = $rhsa;
+                                    }
                                 }
                             }
                         }
@@ -175,6 +184,7 @@ class ApiController extends Controller
 
         $results = array();
         foreach ($filteredRhsaIds as $key => $rhsa) {
+            $logger->error("Filtered: ", $rhsa);
             $rhsadata = $allRhsaData[$rhsa];
             $resdata = array();
             $resdata['RHSA'] = $rhsa;
