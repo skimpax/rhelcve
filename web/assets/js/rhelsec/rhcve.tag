@@ -46,7 +46,7 @@
                         <th>CVE</th>
                         <th>Severity</th>
                         <th>Affected Pkg</th>
-                        <th>Info</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -56,7 +56,7 @@
                         <th>CVE</th>
                         <th>Severity</th>
                         <th>Affected Pkg</th>
-                        <th>Info</th>
+                        <th>Details</th>
                     </tr>
                 </tfoot>
                 <tbody>

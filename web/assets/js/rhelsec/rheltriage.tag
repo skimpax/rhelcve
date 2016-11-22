@@ -53,7 +53,7 @@
                         <th>RHSA</th>
                         <th>Severity</th>
                         <th>Released Pkg</th>
-                        <th>Info</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -63,7 +63,7 @@
                         <th>RHSA</th>
                         <th>Severity</th>
                         <th>Released Pkg</th>
-                        <th>Info</th>
+                        <th>Details</th>
                     </tr>
                 </tfoot>
                 <tbody>

@@ -35,7 +35,7 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/api/rhdb/cvrf/{rhsa}", name="api_rhdb_cvrf_details", 
+     * @Route("/api/rhdb/cvrf/{rhsa}", name="api_rhdb_cvrf_details",
      * requirements={"rhsa": "RH[BES]A-\d{4}:\d{4}"})
      * @Method({"GET"})
      */
@@ -123,6 +123,18 @@ class ApiController extends Controller
             $params['after'] = $after;
         }
 
+        switch ($request->query->get('rhelversion')) {
+            case 'v7':
+                $rpmversion = '.el7_';
+                break;
+            case 'v6':
+                $rpmversion = '.el6_';
+                break;
+            default:
+                return new JsonResponse(['data' => []]);
+                break;
+        }
+
         $jsonrepr = $this->container->get('api_caller')->call(
             new HttpGetJson(
                 self::URL_CVRF,
@@ -167,6 +179,12 @@ class ApiController extends Controller
                             if (gettype($prodbranch['branch']) === "array") {
                                 // TODO
                                 $logger->error("YYYYY: ");
+                                foreach ($prodbranch['branch'] as $key => $prod) {
+                                    if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== null && strpos($prod['full_product_name'], '(v. 7)') !== null) {
+                                        $filteredRhsaIds[] = $rhsa;
+                                        break;
+                                    }
+                                }
                             } else {
                                 $logger->error("XXXXXX: ");
 
@@ -184,16 +202,17 @@ class ApiController extends Controller
 
         $results = array();
         foreach ($filteredRhsaIds as $key => $rhsa) {
-            $logger->error("Filtered: ", $rhsa);
+            $logger->error("Filtered: ", array($rhsa));
             $rhsadata = $allRhsaData[$rhsa];
             $resdata = array();
             $resdata['RHSA'] = $rhsa;
             if (isset($rhsadata['cvrfdoc']['product_tree'])) {
-                 foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
+                foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
                     if ($prodbranch['type'] === 'Product Version') {
-                        if (gettype($prodbranch['branch']) === "array") {
-                            // TODO
-                        } else {
+                        $logger->error("PKGGGGGGGGGGG: ", array ($rpmversion, $prodbranch['name']));
+
+                        if (strpos($prodbranch['name'], $rpmversion) !== null) {
+                            $logger->error("RPMRPMRPMRPM: ");
                             $resdata['packages'][] = $prodbranch['name'];
                             // foreach ($prodbranch['branch'] as $key => $prod) {
                             //     if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== null && strpos($prod['full_product_name'], '(v. 7)') !== null) {

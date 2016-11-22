@@ -46,7 +46,7 @@
                         <th>RHSA</th>
                         <th>Severity</th>
                         <th>CVEs</th>
-                        <th>Info</th>
+                        <th>Details</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -56,7 +56,7 @@
                         <th>RHSA</th>
                         <th>Severity</th>
                         <th>CVEs</th>
-                        <th>Info</th>
+                        <th>Details</th>
                     </tr>
                 </tfoot>
                 <tbody>
