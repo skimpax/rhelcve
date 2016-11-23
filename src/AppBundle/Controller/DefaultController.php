@@ -35,6 +35,48 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/rhdb/erratadetails/cvrf/{rhsa}", name="rhdb_errata_cvrf_details_page",
+     *  requirements={"rhsa": "RH[BES]A-\d{4}:\d{4}"}))
+     */
+    public function getErrataCvrfDetailsAction(Request $request, $rhsa)
+    {
+        // eg. RHSA-2016:2659
+        return $this->render('default/rherratadetails.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            'errata' => $rhsa,
+            'type' => 'CVRF'
+            ]);
+    }
+
+    /**
+     * @Route("/rhdb/erratadetails/cve/{cve}", name="rhdb_errata_cve_details_page",
+     *  requirements={"cve": "CVE-\d{4}-\d{4}"}))
+     */
+    public function getErrataCveDetailsAction(Request $request, $cve)
+    {
+        // eg. CVE-2016-7865
+        return $this->render('default/rherratadetails.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            'errata' => $cve,
+            'type' => 'CVE'
+            ]);
+    }
+
+    /**
+     * @Route("/rhdb/erratadetails/oval/{rhsa}", name="rhdb_errata_oval_details_page",
+     *  requirements={"rhsa": "RH[BES]A-\d{4}:\d{4}"}))
+     */
+    public function getErrataOvalDetailsAction(Request $request, $rhsa)
+    {
+        // eg. RHSA-2016:2659
+        return $this->render('default/rherratadetails.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            'errata' => $rhsa,
+            'type' => 'OVAL'
+            ]);
+    }
+
+    /**
      * @Route("/rheltriage", name="rhel_triage_page")
      */
     public function rhelTriageAction(Request $request)
