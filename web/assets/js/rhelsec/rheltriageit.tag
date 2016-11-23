@@ -10,7 +10,7 @@
     <div class="alert alert-warning" if={ error }>{ error }</div>
 
     <div if={ isLoading == false } >
-        <div if={ data.length }>
+        <div if={ data != null }>
 
             <table id="cvrftable" class="table table-striped table-bordered" width="100%" cellspacing="0">
 <!--                 <thead>
@@ -35,12 +35,28 @@
                 </tfoot> -->
                 <tbody>
                     <tr>
+                        <td><b>RHSA</b></td>
                         <td>{ data.RHSA }</td>
+                    </tr>
+                    <tr>
+                        <td><b>Released Date </b></td>
                         <td>{ data.released_on }</td>
+                    </tr>
+                    <tr>
+                        <td>Severity</td>
                         <td>{ data.severity }</td>
+                    </tr>
+                    <tr>
+                        <td><b>Note</b></td>
                         <td>{ data.note }</td>
+                    </tr>
+                    <tr>
+                        <td><b>Packages</b></td>
                         <td>{ data.released_packages }</td>
-                        <td><a href="{ data.rhel_weblink }">RHEL link</a></td>
+                    </tr>
+                    <tr>
+                        <td><b>RHEL Link</b></td>
+                        <td><a href="{ data.rhel_weblink }">link</a></td>
                     </tr>
                 </tbody>
             </table>
@@ -91,7 +107,7 @@
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                console.log(results);
+                console.log(results.data);
                 self.data = results.data;
             })
             .done(function() {

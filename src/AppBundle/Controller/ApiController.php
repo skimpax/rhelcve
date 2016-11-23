@@ -158,14 +158,14 @@ class ApiController extends Controller
      * @Route("/api/rheltriage", name="api_rheltriage")
      * @Method({"GET"})
      */
-    public function getRhelTriageAction(Request $request)
+    public function getRhelTriageListAction(Request $request)
     {
         $params = array();
 
         // $logger = $this->get('logger');
 
-        $intercept_params = ['rhelversion'];
-        $allparams = $this->extractRhDbQueryParamsArray($request);
+        // $intercept_params = ['rhelversion'];
+        // $allparams = $this->extractRhDbQueryParamsArray($request);
 
         // retrieve all CVRF for the date
         $severity = $request->query->get('severity');
@@ -292,9 +292,32 @@ class ApiController extends Controller
      */
     public function getRhelTriageOneAction(Request $request, $cvrf)
     {
-        $results = array();
+        $logger = $this->get('logger');
+        $params = array();
+        $url = self::BASEURL . "/cvrf/" . $cvrf . ".json";
 
-        return new JsonResponse(['data' => $results]);
+        $jsonrepr = $this->container->get('api_caller')->call(
+            new HttpGetJson(
+                $url,
+                $params
+            )
+        );
+
+        $data = array();
+        if ($jsonrepr !== null) {
+            // convert object to true array
+            $arr = json_decode(json_encode($jsonrepr), true);
+            $data = [
+            'RHSA' => $arr['cvrfdoc']['document_tracking']['identification']['id'],
+            'released_on' => $arr['cvrfdoc']['document_tracking']['current_release_date'],
+            'severity' => $arr['cvrfdoc']['aggregate_severity'],
+            'released_packages' => [],
+            'rhel_weblink' => $arr['cvrfdoc']['document_references']['reference'][0]['url'],
+            ];
+            $logger->error(json_encode($data));
+        }
+
+        return new JsonResponse(['data' => $data]);
     }
 
     private function extractRhDbQueryParamsArray(Request $request)
