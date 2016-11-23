@@ -89,7 +89,7 @@
 
         convert2Apilink(rhsa) {
 
-            return '/rhdb/erratadetails/oval/' + rhsa;
+            return '/gui/erratadetails/oval/' + rhsa;
             
             // https://access.redhat.com/documentation/en/red-hat-security-data-api/version-0.1/red-hat-security-data-api/
             // remove '.json' in URL to get link hat will return data in plain HTML 

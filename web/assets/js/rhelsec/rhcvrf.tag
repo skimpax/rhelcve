@@ -87,7 +87,7 @@
 
         convert2Apilink(rhsa) {
 
-            return '/rhdb/erratadetails/cvrf/' + rhsa;
+            return '/gui/erratadetails/cvrf/' + rhsa;
         }
 
         doRhelGrab() {

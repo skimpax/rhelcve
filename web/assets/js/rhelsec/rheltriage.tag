@@ -54,6 +54,7 @@
                         <th>Severity</th>
                         <th>Released Pkg</th>
                         <th>Details</th>
+                        <th>Triage State</th>
                     </tr>
                 </thead>
                 <tfoot>
@@ -64,6 +65,7 @@
                         <th>Severity</th>
                         <th>Released Pkg</th>
                         <th>Details</th>
+                        <th>Triage State</th>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -74,6 +76,7 @@
                         <td>{ value.severity }</td>
                         <td>{ value.released_packages }</td>
                         <td><a href="{ convert2Apilink(value.RHSA) }">link</a></td>
+                        <td><a class="btn btn-primary" href={ goToTriageItPage(value.RHSA) } role="button">Triage It!</a></td>
                     </tr>
                 </tbody>
             </table>
@@ -95,7 +98,16 @@
 
         convert2Apilink(rhsa) {
 
-            return '/rhdb/cvrfdetails/' + rhsa;
+            return '/gui/erratadetails/cvrf/' + rhsa;
+        }
+
+        convertTriageState(state) {
+            return state;
+        }
+
+        goToTriageItPage(cvrf) {
+
+            return '/gui/rheltriage/' + cvrf;
         }
 
         doRhelGrab() {
@@ -142,8 +154,6 @@
                 format: 'yyyy/mm/dd',
                 startDate: '-1m'
             });
-
-            // doApiRequest();
         })
 
     </script>

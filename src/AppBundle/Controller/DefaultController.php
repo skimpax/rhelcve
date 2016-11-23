@@ -6,7 +6,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-
 class DefaultController extends Controller
 {
     const BASEURL = 'https://access.redhat.com/labs/securitydataapi';
@@ -16,13 +15,21 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
+        return $this->redirectToRoute('gui_rhdb_search', array(), 301);
+    }
+
+    /**
+     * @Route("/gui/rhdbsearch", name="gui_rhdb_search")
+     */
+    public function getRhDbSearch(Request $request)
+    {
         return $this->render('default/rhsearch.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
             ]);
     }
 
     /**
-     * @Route("/rhdb/cvrfdetails/{rhsa}", name="rhel_cvrh_details_page",
+     * @Route("/gui/cvrfdetails/{rhsa}", name="gui_cvrf_details_page",
      *  requirements={"rhsa": "RH[BES]A-\d{4}:\d{4}"}))
      */
     public function getCvrfDetailsAction(Request $request, $rhsa)
@@ -35,7 +42,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/rhdb/erratadetails/cvrf/{rhsa}", name="rhdb_errata_cvrf_details_page",
+     * @Route("/gui/erratadetails/cvrf/{rhsa}", name="gui_errata_cvrf_details_page",
      *  requirements={"rhsa": "RH[BES]A-\d{4}:\d{4}"}))
      */
     public function getErrataCvrfDetailsAction(Request $request, $rhsa)
@@ -49,7 +56,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/rhdb/erratadetails/cve/{cve}", name="rhdb_errata_cve_details_page",
+     * @Route("/gui/erratadetails/cve/{cve}", name="gui_errata_cve_details_page",
      *  requirements={"cve": "CVE-\d{4}-\d{4}"}))
      */
     public function getErrataCveDetailsAction(Request $request, $cve)
@@ -63,7 +70,7 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/rhdb/erratadetails/oval/{rhsa}", name="rhdb_errata_oval_details_page",
+     * @Route("/gui/erratadetails/oval/{rhsa}", name="gui_errata_oval_details_page",
      *  requirements={"rhsa": "RH[BES]A-\d{4}:\d{4}"}))
      */
     public function getErrataOvalDetailsAction(Request $request, $rhsa)
@@ -77,12 +84,23 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/rheltriage", name="rhel_triage_page")
+     * @Route("/gui/rheltriage", name="gui_triage_list_page")
      */
-    public function rhelTriageAction(Request $request)
+    public function rhelTriageListAction(Request $request)
     {
         return $this->render('default/rheltriage.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            ]);
+    }
+
+    /**
+     * @Route("/gui/rheltriage/{cvrf}", name="gui_triage_one_cfrf_page")
+     */
+    public function rhelTriageOneAction(Request $request, $cvrf)
+    {
+        return $this->render('default/rheltriageit.html.twig', [
+            'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
+            'cvrf' => $cvrf
             ]);
     }
 }

@@ -259,6 +259,7 @@ class ApiController extends Controller
             $resdata['released_on'] = $rhsadata['cvrfdoc']['document_tracking']['current_release_date'];
             $resdata['severity'] = strtolower($rhsadata['cvrfdoc']['aggregate_severity']);
             $resdata['packages'] = array();
+            $resdata['triage_state'] = 'ToDo';
             if (isset($rhsadata['cvrfdoc']['product_tree'])) {
                 foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
                     if ($prodbranch['type'] === 'Product Version') {
@@ -279,6 +280,19 @@ class ApiController extends Controller
             // append to results
             $results[] = $resdata;
         }
+
+        return new JsonResponse(['data' => $results]);
+    }
+
+    /**
+     * @Route("/api/rheltriage/{cvrf}", name="api_rheltriage_one_cvrf",
+     * requirements={"cvrf": "RH[BES]{1}A-\d{4}:\d{4}"})
+
+     * @Method({"GET"})
+     */
+    public function getRhelTriageOneAction(Request $request, $cvrf)
+    {
+        $results = array();
 
         return new JsonResponse(['data' => $results]);
     }
