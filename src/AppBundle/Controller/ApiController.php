@@ -17,10 +17,10 @@ class ApiController extends Controller
     const URL_OVAL = self::BASEURL . '/oval.json';
 
     /**
-     * @Route("/api/rhdb/cvrf", name="api_rhdb_cvrf")
+     * @Route("/api/rhdb/cvrf", name="api_rhdb_list_cvrf")
      * @Method({"GET"})
      */
-    public function getCvrfAction(Request $request)
+    public function getCvrfListAction(Request $request)
     {
         $params = $this->extractRhDbQueryParamsArray($request);
 
@@ -35,14 +35,12 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/api/rhdb/cvrf/{rhsa}", name="api_rhdb_cvrf_details",
+     * @Route("/api/rhdb/cvrf/{rhsa}", name="api_rhdb_one_cvrf_details",
      * requirements={"rhsa": "RH[BES]A-\d{4}:\d{4}"})
      * @Method({"GET"})
      */
-    public function getCvrfDetailsAction(Request $request, $rhsa)
+    public function getOneCvrfDetailsAction(Request $request, $rhsa)
     {
-        $logger = $this->get('logger');
-
         $params = array();
         $url = self::BASEURL . "/cvrf/" . $rhsa . ".json";
 
@@ -65,10 +63,10 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/api/rhdb/cve", name="api_rhdb_cve")
+     * @Route("/api/rhdb/cve", name="api_rhdb_list_cve")
      * @Method({"GET"})
      */
-    public function getCveAction(Request $request)
+    public function getCveListAction(Request $request)
     {
         $params = $this->extractRhDbQueryParamsArray($request);
 
@@ -80,6 +78,34 @@ class ApiController extends Controller
         );
 
         return new JsonResponse(['data' => $jsonrepr]);
+    }
+
+   /**
+     * @Route("/api/rhdb/cve/{cve}", name="api_rhdb_one_cve_details",
+     * requirements={"cve": "CVE-\d{4}-\d{4}"})
+     * @Method({"GET"})
+     */
+    public function getOneCveDetailsAction(Request $request, $cve)
+    {
+        $params = array();
+        $url = self::BASEURL . "/cve/" . $cve . ".json";
+
+        $jsonrepr = $this->container->get('api_caller')->call(
+            new HttpGetJson(
+                $url,
+                $params
+            )
+        );
+
+        $data = array();
+        if ($jsonrepr !== null) {
+            $data = [
+            'rhlink' => $url,
+            'jsondata' => $jsonrepr
+            ];
+        }
+
+        return new JsonResponse(['data' => $data]);
     }
 
     /**
@@ -100,6 +126,34 @@ class ApiController extends Controller
         return new JsonResponse(['data' => $jsonrepr]);
     }
 
+   /**
+     * @Route("/api/rhdb/oval/{rhsa}", name="api_rhdb_one_oval_details",
+     * requirements={"rhsa": "RHSA-\d{4}:\d{4}"})
+     * @Method({"GET"})
+     */
+    public function getOneOvalDetailsAction(Request $request, $rhsa)
+    {
+        $params = array();
+        $url = self::BASEURL . "/oval/" . $rhsa . ".json";
+
+        $jsonrepr = $this->container->get('api_caller')->call(
+            new HttpGetJson(
+                $url,
+                $params
+            )
+        );
+
+        $data = array();
+        if ($jsonrepr !== null) {
+            $data = [
+            'rhlink' => $url,
+            'jsondata' => $jsonrepr
+            ];
+        }
+
+        return new JsonResponse(['data' => $data]);
+    }
+
     /**
      * @Route("/api/rheltriage", name="api_rheltriage")
      * @Method({"GET"})
@@ -108,9 +162,9 @@ class ApiController extends Controller
     {
         $params = array();
 
-        $logger = $this->get('logger');
+        // $logger = $this->get('logger');
 
-        $intercept_params = [ 'rhelversion'];
+        $intercept_params = ['rhelversion'];
         $allparams = $this->extractRhDbQueryParamsArray($request);
 
         // retrieve all CVRF for the date
@@ -149,8 +203,6 @@ class ApiController extends Controller
         $allRhsa = array();
         foreach ($jsonrepr as $key => $value) {
             $arr = (array)$value;
-            $logger->error("******** " . $key);
-            $logger->error($arr['RHSA']);
             $allRhsa[] = $arr['RHSA'];
         }
 
@@ -175,21 +227,19 @@ class ApiController extends Controller
                 //
                 if (isset($arr['cvrfdoc']['product_tree'])) {
                     foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
-                        if ($prodbranch['type'] === 'Product Family' && strpos($prodbranch['name'], 'Red Hat Enterprise Linux') !== null) {
+                        if ($prodbranch['type'] === 'Product Family' && strpos($prodbranch['name'], 'Red Hat Enterprise Linux') !== false) {
                             if (gettype($prodbranch['branch']) === "array") {
-                                // TODO
-                                $logger->error("YYYYY: ");
+                                // $logger->error("YYYYY: ");
                                 foreach ($prodbranch['branch'] as $key => $prod) {
-                                    if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== null && strpos($prod['full_product_name'], '(v. 7)') !== null) {
+                                    if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== false && strpos($prod['full_product_name'], '(v. 7)') !== false) {
                                         $filteredRhsaIds[] = $rhsa;
                                         break;
                                     }
                                 }
                             } else {
-                                $logger->error("XXXXXX: ");
-
+                                // $logger->error("XXXXXX: ");
                                 foreach ($prodbranch['branch'] as $key => $prod) {
-                                    if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== null && strpos($prod['full_product_name'], '(v. 7)') !== null) {
+                                    if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== false && strpos($prod['full_product_name'], '(v. 7)') !== false) {
                                         $filteredRhsaIds[] = $rhsa;
                                     }
                                 }
@@ -202,20 +252,23 @@ class ApiController extends Controller
 
         $results = array();
         foreach ($filteredRhsaIds as $key => $rhsa) {
-            $logger->error("Filtered: ", array($rhsa));
+            // $logger->error("Filtered: ", array($rhsa));
             $rhsadata = $allRhsaData[$rhsa];
             $resdata = array();
             $resdata['RHSA'] = $rhsa;
+            $resdata['released_on'] = $rhsadata['cvrfdoc']['document_tracking']['current_release_date'];
+            $resdata['severity'] = strtolower($rhsadata['cvrfdoc']['aggregate_severity']);
+            $resdata['packages'] = array();
             if (isset($rhsadata['cvrfdoc']['product_tree'])) {
                 foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
                     if ($prodbranch['type'] === 'Product Version') {
-                        $logger->error("PKGGGGGGGGGGG: ", array ($rpmversion, $prodbranch['name']));
+                        // $logger->error("PKGGGGGGGGGGG: ", array ($rpmversion, $prodbranch['name']));
 
-                        if (strpos($prodbranch['name'], $rpmversion) !== null) {
-                            $logger->error("RPMRPMRPMRPM: ");
-                            $resdata['packages'][] = $prodbranch['name'];
+                        if (strpos($prodbranch['name'], $rpmversion) !== false) {
+                            // $logger->error("RPMRPMRPMRPM: ");
+                            $resdata['released_packages'][] = $prodbranch['name'];
                             // foreach ($prodbranch['branch'] as $key => $prod) {
-                            //     if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== null && strpos($prod['full_product_name'], '(v. 7)') !== null) {
+                            //     if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== false && strpos($prod['full_product_name'], '(v. 7)') !== false) {
                             //         $filteredRhsaIds[] = $rhsa;
                             //     }
                             // }
@@ -223,6 +276,8 @@ class ApiController extends Controller
                     }
                 }
             }
+            // append to results
+            $results[] = $resdata;
         }
 
         return new JsonResponse(['data' => $results]);

@@ -66,8 +66,7 @@
                         <td>{ value.RHSA }</td>
                         <td>{ value.severity }</td>
                         <td>{ value.released_packages }</td>
-                        <!-- <td><a href="{ convert2htmllink(value.resource_url) }">link</a></td> -->
-                        <td><a href="{ convert2htmllinkXXX(value.RHSA) }">link</a></td>
+                        <td><a href="{ convert2Apilink(value.RHSA) }">link</a></td>
                     </tr>
                 </tbody>
             </table>
@@ -86,19 +85,9 @@
 
         var self = this
 
-        convert2htmllink(jsonlink) {
+        convert2Apilink(rhsa) {
 
-            // https://access.redhat.com/documentation/en/red-hat-security-data-api/version-0.1/red-hat-security-data-api/
-            // remove '.json' in URL to get link hat will return data in plain HTML 
-            return jsonlink.replace(/\.json$/, ".xml");
-        }
-
-        convert2htmllinkXXX(rhsa) {
-
-            // https://access.redhat.com/documentation/en/red-hat-security-data-api/version-0.1/red-hat-security-data-api/
-            // remove '.json' in URL to get link hat will return data in plain HTML 
-            //return jsonlink.replace(/\.json$/, ".xml");
-            return '/rhdb/cvrfdetails/' + rhsa;
+            return '/rhdb/erratadetails/cvrf/' + rhsa;
         }
 
         doRhelGrab() {

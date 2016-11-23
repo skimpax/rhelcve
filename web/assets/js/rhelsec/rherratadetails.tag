@@ -1,4 +1,4 @@
-<rhcvrfdetails>
+<rherratadetails>
     <hr>
     <div if={ isLoading } class='loader center-block'>
         <!-- <img src='puff.svg' /> -->
@@ -26,9 +26,16 @@
 
         var self = this
 
-        doApiRequest(rhsa) {
+        doApiRequest(errata, type) {
 
-            var apiurl = "/api/rhdb/cvrf/" + rhsa;
+            var apiurl;
+
+            switch (type) {
+                case 'CVRF': apiurl = "/api/rhdb/cvrf/" + errata; break;
+                case 'CVE': apiurl = "/api/rhdb/cve/" + errata; break;
+                case 'OVAL': apiurl = "/api/rhdb/oval/" + errata; break;
+                default: return; break;
+            }
 
             self.rhdirectlink = null;
             self.prettyjson = null;
@@ -59,9 +66,9 @@
 
         self.on('mount', function(){
 
-            self.doApiRequest(opts.rhsa);
+            self.doApiRequest(opts.errata, opts.type);
         })
 
     </script>
 
-</rhcvrfdetails>
+</rherratadetails>

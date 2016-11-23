@@ -66,7 +66,7 @@
                         <td>{ value.CVE }</td>
                         <td>{ value.severity }</td>
                         <td>{ value.affected_packages }</td>
-                        <td><a href="{ convert2htmllink(value.resource_url) }">link</a></td>
+                        <td><a href="{ convert2Apilink(value.CVE) }">link</a></td>
                     </tr>
                 </tbody>
             </table>
@@ -86,11 +86,13 @@
 
         var self = this
 
-        convert2htmllink(jsonlink) {
+        convert2Apilink(cve) {
 
+            return '/rhdb/erratadetails/cve/' + cve;
+            
             // https://access.redhat.com/documentation/en/red-hat-security-data-api/version-0.1/red-hat-security-data-api/
             // remove '.json' in URL to get link hat will return data in plain HTML 
-            return jsonlink.replace(/\.json$/, ".xml");
+            //return jsonlink.replace(/\.json$/, ".xml");
         }
 
         doRhelGrab() {
