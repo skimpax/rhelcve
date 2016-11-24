@@ -18,13 +18,18 @@
     </div>
 
     <rheltriageit></rheltriageit>
+
+    <scrolltotop></scrolltotop>
 {% endblock %}
 
 
 {% block javascripts %}
     <script src="{{ asset('assets/js/rhelsec/rheltriageit.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/js/rhelsec/scrolltotop.tag') }}" type="riot/tag"></script>
+
 
     <script type="text/javascript">
         riot.mount('rheltriageit', { cvrf: "{{ cvrf }}" });
+        riot.mount('scrolltotop');
     </script>
 {% endblock %}

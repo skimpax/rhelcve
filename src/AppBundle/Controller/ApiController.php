@@ -311,6 +311,7 @@ class ApiController extends Controller
             'RHSA' => $arr['cvrfdoc']['document_tracking']['identification']['id'],
             'released_on' => $arr['cvrfdoc']['document_tracking']['current_release_date'],
             'severity' => $arr['cvrfdoc']['aggregate_severity'],
+            'note' => $arr['cvrfdoc']['document_notes']['note'][0],
             'released_packages' => [],
             'rhel_weblink' => $arr['cvrfdoc']['document_references']['reference'][0]['url'],
             ];

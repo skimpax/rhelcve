@@ -11,7 +11,9 @@
 
     <div if={ isLoading == false } >
         <div if={ data != null }>
-
+            <h3>Errata Data</h3>
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
             <table id="cvrftable" class="table table-striped table-bordered" width="100%" cellspacing="0">
 <!--                 <thead>
                     <tr>
@@ -43,7 +45,7 @@
                         <td>{ data.released_on }</td>
                     </tr>
                     <tr>
-                        <td>Severity</td>
+                        <td><b>Severity</b></td>
                         <td>{ data.severity }</td>
                     </tr>
                     <tr>
@@ -60,20 +62,41 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
+            </div>
             <hr>
-            <h3>Decision</h3>
+            <h3>Triage Decision</h3>
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
             <form id="myform1" class="form" onsubmit={ doSubmit } action="#">
                 <div class="form-group">
-                    <label for="iddecision">Severity:</label>
+                    <label for="iddecision">Decision:</label>
                     <select id="iddecision" class="form-control" name="decision" required>
                         <option value="accept">Accept</option>
                         <option value="reject">Reject</option>
                         <option value="unknown">Don't Know</option>
                     </select>
                 </div>
-                <textarea class="form-control" placeholder="Some Comment" rows="3"></textarea>
+                <div class="form-group">
+                    <label for="idcomment">Comment:</label>
+                    <textarea id="idcomment" class="form-control" name="comment" placeholder="Some comment to explain the decision made" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="iddomain">Domain:</label>
+                    <input type="text" class="form-control" name="domain" placeholder="Indicate domain this errata applies to">
+                </div>
+                <div class="form-group">
+                    <label for="idpriority">Priority:</label>
+                    <select id="idpriority" class="form-control" name="priority" required>
+                        <option class="bg-danger" value="high">High</option>
+                        <option class="bg-warning" value="medium">Medium</option>
+                        <option class="bg-info" value="low">Low</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-success">Apply</button>
             </form>
+            </div>
+            </div>
 
         </div>
         <div if={ data == null || data.length == 0 }>
@@ -91,12 +114,12 @@
 
         var self = this
 
-        doRhelGrab() {
+        doSubmit() {
 
             var queryparams = $('#myform1').serialize();
             // console.log(queryparams);
 
-            this.doGetApiRequest(queryparams);
+            self.doApiPostRequest(cvrf, queryparams);
         }
 
         doApiGetRequest(cvrf) {
