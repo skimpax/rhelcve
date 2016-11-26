@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\;
+namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -27,6 +27,13 @@ class Triage
      * @ORM\Column(name="errata", type="string", length=20, unique=true)
      */
     private $errata;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="erratadate", type="datetimetz")
+     */
+    private $erratadate;
 
     /**
      * @var string
