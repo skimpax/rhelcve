@@ -285,9 +285,8 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/api/rheltriage/{cvrf}", name="api_rheltriage_get_one_cvrf",
+     * @Route("/api/rheltriage/{cvrf}",
      * requirements={"cvrf": "RH[BES]{1}A-\d{4}:\d{4}"})
-
      * @Method({"GET"})
      */
     public function getRhelTriageOneAction(Request $request, $cvrf)
@@ -322,21 +321,21 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/api/rheltriage/{cvrf}", name="api_rheltriage_post_one_cvrf",
+     * @Route("/api/rheltriage/{cvrf}",
      * requirements={"cvrf": "RH[BES]{1}A-\d{4}:\d{4}"})
-
      * @Method({"POST"})
      */
     public function postRhelTriageOneAction(Request $request, $cvrf)
     {
         $logger = $this->get('logger');
-
+// $logger->error($request->request->all());
         $repo = $this->getDoctrine()->getRepository('AppBundle:Triage');
         
         $triage = $repo->findByErrata($cvrf);
         if ($triage === null) {
             $triage = new Triage();
         }
+        
         $triage->setErrata('cvrf');
         $triage->setErratadate($request->request->get('erratadate'));
         $triage->setDecision($request->request->get('decision', 'ToDo'));

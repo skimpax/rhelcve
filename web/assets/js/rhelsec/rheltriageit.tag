@@ -95,7 +95,11 @@
                         </div>
                         <div class="form-group">
                             <label for="idreboot">Reboot Required:</label>
-                            <input id="idreboot" data-toggle="toggle" type="checkbox" data-on="Yes" data-off="No" data-onstyle="warning">
+                            <input id="idreboot" data-toggle="toggle" type="checkbox" data-on="Yes" data-off="No" data-onstyle="danger" data-offstyle="info" name="reboot">
+                        </div>
+                        <div class="form-group">
+                            <input type="hidden" name="erratadate" value={ data.released_on }>
+                            <input type="hidden" name="user" value="clherieau">
                         </div>
                         <button type="submit" class="btn btn-success">Apply</button>
                     </form>
@@ -120,9 +124,22 @@
         doSubmit() {
 
             var queryparams = $('#myform1').serialize();
-            // console.log(queryparams);
+            console.log(queryparams);
+            // var queryparams = getFormData('#myform1');
+            // var dat = JSON.stringify($('#myform1').serializeArray());
+            self.doApiPostRequest(self.cvrf, queryparams);
+        }
 
-            self.doApiPostRequest(cvrf, queryparams);
+        getFormData($form) {
+
+            var unindexed_array = $form.serializeArray();
+            var indexed_array = {};
+
+            $.map(unindexed_array, function(n, i){
+                indexed_array[n['name']] = n['value'];
+            });
+
+            return indexed_array;
         }
 
         doApiGetRequest(cvrf) {
@@ -150,23 +167,22 @@
             });
         }
 
-        doApiPostRequest(cvrf) {
+        doApiPostRequest(cvrf, jsondata) {
 
             var apiurl = "/api/rheltriage/" + cvrf;
 
             self.isLoading = true;
             self.update();
 
-            $.postJSON(apiurl, function(results) {
+            $.post(apiurl, JSON.stringify(jsondata), function(results) {
                 console.log(results);
-                self.data = results.data;
             })
             .done(function() {
             // alert( "second success" );
             })
             .fail(function() {
                 // alert( "error" );
-                self.error = "Failed to retrieve data from server!";
+                self.error = "Failed to send data to server!";
             })
             .always(function() {
                 // alert( "finished" );
@@ -177,9 +193,10 @@
 
         self.on('mount', function() {
 
+            $('#idreboot').bootstrapToggle();
+
             self.cvrf = opts.cvrf;
             self.doApiGetRequest(self.cvrf);
-            $('#idreboot').bootstrapToggle();
         })
 
     </script>
