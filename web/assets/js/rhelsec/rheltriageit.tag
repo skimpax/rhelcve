@@ -68,36 +68,39 @@
             <h3>Triage Decision</h3>
             <div class="row">
                 <div class="col-md-10 col-md-offset-1">
-            <form id="myform1" class="form" onsubmit={ doSubmit } action="#">
-                <div class="form-group">
-                    <label for="iddecision">Decision:</label>
-                    <select id="iddecision" class="form-control" name="decision" required>
-                        <option value="accept">Accept</option>
-                        <option value="reject">Reject</option>
-                        <option value="unknown">Don't Know</option>
-                    </select>
+                    <form id="myform1" class="form" onsubmit={ doSubmit } action="#">
+                        <div class="form-group">
+                            <label for="iddecision">Decision:</label>
+                            <select id="iddecision" class="form-control" name="decision" required>
+                                <option value="accept">Accept</option>
+                                <option value="reject">Reject</option>
+                                <option value="unknown">Don't Know</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="idcomment">Comment:</label>
+                            <textarea id="idcomment" class="form-control" name="comment" placeholder="Some comment to explain the decision made" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="iddomain">Domain:</label>
+                            <input type="text" class="form-control" name="domain" placeholder="Indicate domain this errata applies to">
+                        </div>
+                        <div class="form-group">
+                            <label for="idpriority">Deploy Priority:</label>
+                            <select id="idpriority" class="form-control" name="deploypri" required>
+                                <option class="bg-danger" value="high">High</option>
+                                <option class="bg-warning" value="medium">Medium</option>
+                                <option class="bg-info" value="low">Low</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="idreboot">Reboot Required:</label>
+                            <input id="idreboot" data-toggle="toggle" type="checkbox" data-on="Yes" data-off="No" data-onstyle="warning">
+                        </div>
+                        <button type="submit" class="btn btn-success">Apply</button>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label for="idcomment">Comment:</label>
-                    <textarea id="idcomment" class="form-control" name="comment" placeholder="Some comment to explain the decision made" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="iddomain">Domain:</label>
-                    <input type="text" class="form-control" name="domain" placeholder="Indicate domain this errata applies to">
-                </div>
-                <div class="form-group">
-                    <label for="idpriority">Priority:</label>
-                    <select id="idpriority" class="form-control" name="priority" required>
-                        <option class="bg-danger" value="high">High</option>
-                        <option class="bg-warning" value="medium">Medium</option>
-                        <option class="bg-info" value="low">Low</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-success">Apply</button>
-            </form>
             </div>
-            </div>
-
         </div>
         <div if={ data == null || data.length == 0 }>
             <div class="alert alert-info">No data received.</div>
@@ -176,6 +179,7 @@
 
             self.cvrf = opts.cvrf;
             self.doApiGetRequest(self.cvrf);
+            $('#idreboot').bootstrapToggle();
         })
 
     </script>

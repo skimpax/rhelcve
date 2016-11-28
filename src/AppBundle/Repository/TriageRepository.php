@@ -13,6 +13,7 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
     public function findMostRecentErrataDate($count = 1)
     {
         $em = $this->getDoctrine()->getManager();
+
         $query = $em->createQuery(
             'SELECT t
             FROM AppBundle:Triage t
@@ -29,6 +30,7 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
     public function findMostRecentErrataModified($count = 1)
     {
         $em = $this->getDoctrine()->getManager();
+
         $query = $em->createQuery(
             'SELECT t
             FROM AppBundle:Triage t
@@ -40,5 +42,74 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
         $res = $query->getResult();
 
         return $res;
+    }
+
+    public function findById($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQuery(
+            'SELECT t
+            FROM AppBundle:Triage t
+            WHERE t.id = :id'
+        )
+        ->setParameter('id', $id);
+
+        $res = $query->getResult();
+
+        return $res;
+    }
+
+    public function findByErrata($errata)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $query = $em->createQuery(
+            'SELECT t
+            FROM AppBundle:Triage t
+            WHERE t.errata = :errata'
+        )
+        ->setParameter('errata', $errata);
+
+        $res = $query->getResult();
+
+        return $res;
+    }
+
+    public function findAll($limit = 0, $offset = 0, $orderBy = array())
+    {
+        //return $this->db->fetchAll("SELECT * FROM TeleinfoHpHc WHERE ");
+        // Provide a default orderBy.
+        if (!$orderBy) {
+            $orderBy = array('timestamp' => 'ASC');
+        }
+
+        $qb = $this->db->createQueryBuilder();
+        $qb
+        ->select('e.*')
+        ->from('TeleinfoHpHc', 'e')
+        ->setFirstResult($offset)
+        ->orderBy('e.' . key($orderBy), current($orderBy));
+
+        if ($limit != 0) {
+            $qb->setMaxResults($limit);
+        }
+
+        $statement = $qb->execute();
+
+        return $statement->fetchAll();
+    }
+
+    public function save(Triage $triage)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        // tells Doctrine you want to (eventually) save the Triage (no queries yet)
+        $em->persist($triage);
+
+        // actually executes the queries (i.e. the INSERT query)
+        $em->flush();
+
+        //return $triage->getId();
     }
 }

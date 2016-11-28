@@ -38,9 +38,9 @@ class Triage
     /**
      * @var string
      *
-     * @ORM\Column(name="status", type="string", length=20)
+     * @ORM\Column(name="decision", type="string", length=20)
      */
-    private $status;
+    private $decision;
 
     /**
      * @var \DateTime
@@ -120,27 +120,27 @@ class Triage
     }
 
     /**
-     * Set status
+     * Set decision
      *
-     * @param string $status
+     * @param string $decision
      *
      * @return Triage
      */
-    public function setStatus($status)
+    public function setDecision($decision)
     {
-        $this->status = $status;
+        $this->decision = $decision;
 
         return $this;
     }
 
     /**
-     * Get status
+     * Get decision
      *
      * @return string
      */
-    public function getStatus()
+    public function getDecision()
     {
-        return $this->status;
+        return $this->decision;
     }
 
     /**
