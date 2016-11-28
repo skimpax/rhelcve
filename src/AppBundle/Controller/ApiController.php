@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Lsw\ApiCallerBundle\Call\HttpGetJson;
 
+use AppBundle\Entity\Triage;
+
 class ApiController extends Controller
 {
     const BASEURL = 'https://access.redhat.com/labs/securitydataapi';
@@ -331,15 +333,17 @@ class ApiController extends Controller
 // $logger->error($request->request->all());
         $repo = $this->getDoctrine()->getRepository('AppBundle:Triage');
         
-        $triage = $repo->findByErrata($cvrf);
-        if ($triage === null) {
+        $res = $repo->findByErrata($cvrf);
+        if (empty($res)) {
             $triage = new Triage();
+        } else {
+            $triage = $res[0];
         }
         
         $triage->setErrata('cvrf');
         $triage->setErratadate($request->request->get('erratadate'));
         $triage->setDecision($request->request->get('decision', 'ToDo'));
-        $triage->setLastchange(new \DateTime());
+        //$triage->setLastchange(new \DateTime('now'));
         $triage->setUser($request->request->get('user'));
         $triage->setDeployprio($request->request->get('deployprio', 'Low'));
         $triage->setDomain($request->request->get('domain'));

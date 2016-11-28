@@ -2,6 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Triage;
+
 /**
 * TriageRepository
 *
@@ -12,7 +14,7 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
 {
     public function findMostRecentErrataDate($count = 1)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getEntityManager();
 
         $query = $em->createQuery(
             'SELECT t
@@ -29,7 +31,7 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
 
     public function findMostRecentErrataModified($count = 1)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getEntityManager();
 
         $query = $em->createQuery(
             'SELECT t
@@ -46,7 +48,7 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
 
     public function findById($id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getEntityManager();
 
         $query = $em->createQuery(
             'SELECT t
@@ -62,7 +64,7 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
 
     public function findByErrata($errata)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getEntityManager();
 
         $query = $em->createQuery(
             'SELECT t
@@ -102,7 +104,7 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
 
     public function save(Triage $triage)
     {
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getEntityManager();
 
         // tells Doctrine you want to (eventually) save the Triage (no queries yet)
         $em->persist($triage);

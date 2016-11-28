@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Triage
  *
  * @ORM\Table(name="triage")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\\TriageRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TriageRepository")
  */
 class Triage
 {
@@ -31,7 +31,7 @@ class Triage
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="erratadate", type="datetimetz")
+     * @ORM\Column(name="erratadate", type="datetime")
      */
     private $erratadate;
 
@@ -45,7 +45,7 @@ class Triage
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="lastchange", type="datetimetz")
+     * @ORM\Column(name="lastchange", type="datetime")
      */
     private $lastchange;
 
@@ -152,7 +152,9 @@ class Triage
      */
     public function setLastchange($lastchange)
     {
-        $this->lastchange = $lastchange;
+        $this->lastchange = new \DateTime($lastchange->format('Y-m-d H:i:s'));
+        // force save to UTC
+        $this->lastchange->setTimezone(new \DateTimeZone('UTC'));
 
         return $this;
     }
@@ -286,5 +288,28 @@ class Triage
     {
         return $this->comment;
     }
-}
 
+    /**
+     * Set erratadate
+     *
+     * @param \DateTime $erratadate
+     *
+     * @return Triage
+     */
+    public function setErratadate($erratadate)
+    {
+        $this->erratadate = $erratadate;
+
+        return $this;
+    }
+
+    /**
+     * Get erratadate
+     *
+     * @return \DateTime
+     */
+    public function getErratadate()
+    {
+        return $this->erratadate;
+    }
+}
