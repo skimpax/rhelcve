@@ -340,10 +340,12 @@ class ApiController extends Controller
             $triage = $res[0];
         }
         
-        $triage->setErrata('cvrf');
-        $triage->setErratadate($request->request->get('erratadate'));
+        $errdate = new \DateTime($request->request->get('erratadate'));
+
+        $triage->setErrata($cvrf);
+        $triage->setErratadate($errdate);
         $triage->setDecision($request->request->get('decision', 'ToDo'));
-        //$triage->setLastchange(new \DateTime('now'));
+        $triage->setLastchange(new \DateTime('now'));
         $triage->setUser($request->request->get('user'));
         $triage->setDeployprio($request->request->get('deployprio', 'Low'));
         $triage->setDomain($request->request->get('domain'));

@@ -98,6 +98,7 @@
                             <input id="idreboot" data-toggle="toggle" type="checkbox" data-on="Yes" data-off="No" data-onstyle="danger" data-offstyle="info" name="reboot">
                         </div>
                         <div class="form-group">
+                            <input type="hidden" name="errata" value={ data.RHSA }>
                             <input type="hidden" name="erratadate" value={ data.released_on }>
                             <input type="hidden" name="user" value="clherieau">
                         </div>
@@ -127,7 +128,7 @@
             console.log(queryparams);
             // var queryparams = getFormData('#myform1');
             // var dat = JSON.stringify($('#myform1').serializeArray());
-            self.doApiPostRequest(self.cvrf, queryparams);
+            //self.doApiPostRequest(self.cvrf, queryparams);
         }
 
         getFormData($form) {

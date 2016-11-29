@@ -150,11 +150,9 @@ class Triage
      *
      * @return Triage
      */
-    public function setLastchange($lastchange)
+    public function setLastchange(\DateTime $lastchange)
     {
-        $this->lastchange = new \DateTime($lastchange->format('Y-m-d H:i:s'));
-        // force save to UTC
-        $this->lastchange->setTimezone(new \DateTimeZone('UTC'));
+        $this->lastchange = new \DateTime($lastchange->format('Y-m-d H:i:s'), new \DateTimeZone('UTC'));
 
         return $this;
     }
@@ -296,9 +294,9 @@ class Triage
      *
      * @return Triage
      */
-    public function setErratadate($erratadate)
+    public function setErratadate(\DateTime $erratadate)
     {
-        $this->erratadate = $erratadate;
+        $this->erratadate = new \DateTime($erratadate->format('Y-m-d H:i:s'), new \DateTimeZone('UTC'));
 
         return $this;
     }
