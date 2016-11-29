@@ -94,7 +94,8 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/gui/rheltriage/{cvrf}", name="gui_triage_one_cfrf_page")
+     * @Route("/gui/rheltriage/{cvrf}", name="gui_triage_one_cfrf_page",
+     * requirements={"cvrf": "RH[BES]{1}A-\d{4}:\d{4}"})
      */
     public function rhelTriageOneAction(Request $request, $cvrf)
     {

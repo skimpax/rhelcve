@@ -87,7 +87,7 @@
                         </div>
                         <div class="form-group">
                             <label for="idpriority">Deploy Priority:</label>
-                            <select id="idpriority" class="form-control" name="deploypri" required>
+                            <select id="idpriority" class="form-control" name="deployprio" required>
                                 <option class="bg-danger" value="high">High</option>
                                 <option class="bg-warning" value="medium">Medium</option>
                                 <option class="bg-info" value="low">Low</option>
@@ -116,6 +116,7 @@
     <script>
 
         this.cvrf = null;
+        this.triagepage = null;
         this.data = [];
         this.isLoading = false;
         this.error = null;
@@ -128,7 +129,7 @@
             console.log(queryparams);
             // var queryparams = getFormData('#myform1');
             // var dat = JSON.stringify($('#myform1').serializeArray());
-            //self.doApiPostRequest(self.cvrf, queryparams);
+            self.doApiPostRequest(self.cvrf, queryparams);
         }
 
         getFormData($form) {
@@ -177,6 +178,8 @@
 
             $.post(apiurl, JSON.stringify(jsondata), function(results) {
                 console.log(results);
+                alert("Triage successfuly done!");
+                window.location.replace(self.triagepage);
             })
             .done(function() {
             // alert( "second success" );
@@ -197,6 +200,7 @@
             $('#idreboot').bootstrapToggle();
 
             self.cvrf = opts.cvrf;
+            self.triagepage = opts.triagepage;
             self.doApiGetRequest(self.cvrf);
         })
 

@@ -342,6 +342,7 @@ class ApiController extends Controller
         
         $errdate = new \DateTime($request->request->get('erratadate'));
 
+$logger->error("XXXXXXXXXX", array($errdate));
         $triage->setErrata($cvrf);
         $triage->setErratadate($errdate);
         $triage->setDecision($request->request->get('decision', 'ToDo'));
