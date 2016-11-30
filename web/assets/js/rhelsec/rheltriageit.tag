@@ -41,6 +41,10 @@
                         <td>{ data.RHSA }</td>
                     </tr>
                     <tr>
+                        <td><b>Title</b></td>
+                        <td>{ data.title }</td>
+                    </tr>
+                    <tr>
                         <td><b>Released Date </b></td>
                         <td>{ data.released_on }</td>
                     </tr>
@@ -126,16 +130,15 @@
 
         doSubmit() {
 
-            var queryparams = $('#myform1').serialize();
-            console.log(queryparams);
-            // var queryparams = getFormData('#myform1');
-            // var dat = JSON.stringify($('#myform1').serializeArray());
-            self.doApiPostRequest(self.cvrf, queryparams);
+            console.log($('#myform1').serialize());
+
+            var obj = self.getFormData('#myform1');
+            self.doApiPostRequest(self.cvrf, obj);
         }
 
         getFormData($form) {
 
-            var unindexed_array = $form.serializeArray();
+            var unindexed_array = $($form).serializeArray();
             var indexed_array = {};
 
             $.map(unindexed_array, function(n, i){
@@ -170,14 +173,14 @@
             });
         }
 
-        doApiPostRequest(cvrf, jsondata) {
+        doApiPostRequest(cvrf, dataobj) {
 
             var apiurl = self.triageitapi ; //"/api/rheltriage/" + cvrf;
 
             self.isLoading = true;
             self.update();
 
-            $.post(apiurl, JSON.stringify(jsondata), function(results) {
+            $.post(apiurl, dataobj, function(results) {
                 console.log(results);
                 alert("Triage successfuly done!");
                 window.location.replace(self.triagepage);

@@ -51,6 +51,7 @@
                         <!-- <th>Index</th> -->
                         <th>Released On</th>
                         <th>RHSA</th>
+                        <th>Title</th>
                         <th>Severity</th>
                         <th>Released Pkg</th>
                         <th>Details</th>
@@ -62,6 +63,7 @@
                         <!-- <th>Index</th> -->
                         <th>Released On</th>
                         <th>RHSA</th>
+                        <th>Title</th>
                         <th>Severity</th>
                         <th>Released Pkg</th>
                         <th>Details</th>
@@ -73,10 +75,21 @@
                         <!-- <td>#{ i }</td> -->
                         <td>{ value.released_on }</td>
                         <td>{ value.RHSA }</td>
+                        <td>{ value.title }</td>
                         <td>{ value.severity }</td>
                         <td>{ value.released_packages }</td>
                         <td><a href="{ convert2Apilink(value.RHSA) }">link</a></td>
-                        <td><a class="btn btn-primary" href={ goToTriageItPage(value.RHSA) } role="button">Triage It!</a></td>
+                        <td>
+                            <virtual if={ value.triage_decision == 'unknown' }>
+                                <a class="btn btn-primary" href={ goToTriageItPage(value.RHSA) } role="button">Triage It!</a>
+                            </virtual>
+                            <virtual if={ value.triage_decision == 'accept' }>
+                                <a class="btn btn-success" href={ goToTriageItPage(value.RHSA) } role="button">Accepted</a>
+                            </virtual>
+                            <virtual if={ value.triage_decision == 'reject' }>
+                                <a class="btn btn-danger" href={ goToTriageItPage(value.RHSA) } role="button">Rejected</a>
+                            </virtual>
+                        </td>
                     </tr>
                 </tbody>
             </table>

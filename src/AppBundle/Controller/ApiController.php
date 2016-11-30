@@ -261,10 +261,11 @@ class ApiController extends Controller
             $rhsadata = $allRhsaData[$rhsa];
             $resdata = array();
             $resdata['RHSA'] = $rhsa;
+            $resdata['title'] = $rhsadata['cvrfdoc']['document_title'];
             $resdata['released_on'] = $rhsadata['cvrfdoc']['document_tracking']['current_release_date'];
             $resdata['severity'] = strtolower($rhsadata['cvrfdoc']['aggregate_severity']);
             $resdata['packages'] = array();
-            $resdata['triage_state'] = 'ToDo';
+            $resdata['triage_decision'] = 'unknown';
             if (isset($rhsadata['cvrfdoc']['product_tree'])) {
                 foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
                     if ($prodbranch['type'] === 'triage Version') {
@@ -293,7 +294,7 @@ class ApiController extends Controller
             $res = $repo->findByErrata($cvrf);
             if (!empty($res)) {
                 $logger->info('XXXX: ', array($res[0]->getDecision()));
-                $value['triage_state'] = $res[0]->getDecision();
+                $results[$key]['triage_decision'] = $res[0]->getDecision();
             }
         }
 
@@ -324,6 +325,7 @@ class ApiController extends Controller
             $arr = json_decode(json_encode($jsonrepr), true);
             $data = [
             'RHSA' => $arr['cvrfdoc']['document_tracking']['identification']['id'],
+            'title' => $arr['cvrfdoc']['document_title'],
             'released_on' => $arr['cvrfdoc']['document_tracking']['current_release_date'],
             'severity' => $arr['cvrfdoc']['aggregate_severity'],
             'note' => $arr['cvrfdoc']['document_notes']['note'][0],
@@ -344,7 +346,7 @@ class ApiController extends Controller
     public function postRhelTriageOneAction(Request $request, $cvrf)
     {
         $logger = $this->get('logger');
-// $logger->error($request->request->all());
+        $logger->error("Params: ", $request->request->all());
         $repo = $this->getDoctrine()->getRepository('AppBundle:Triage');
         
         $res = $repo->findByErrata($cvrf);
@@ -356,15 +358,14 @@ class ApiController extends Controller
         
         $errdate = new \DateTime($request->request->get('erratadate'));
 
-$logger->error("XXXXXXXXXX", array($errdate));
         $triage->setErrata($cvrf);
         $triage->setErratadate($errdate);
-        $triage->setDecision($request->request->get('decision', 'ToDo'));
+        $triage->setDecision($request->request->get('decision', 'unknown'));
         $triage->setLastchange(new \DateTime('now'));
         $triage->setUser($request->request->get('user'));
         $triage->setDeployprio($request->request->get('deployprio', 'low'));
         $triage->setDomain($request->request->get('domain'));
-        $triage->setRebootreq($request->request->get('rebootreq', false));
+        $triage->setRebootreq($request->request->get('reboot', 'off') === 'on');
         $triage->setComment($request->request->get('comment'));
 
         $repo->save($triage);
