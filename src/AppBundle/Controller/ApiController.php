@@ -164,7 +164,7 @@ class ApiController extends Controller
     {
         $params = array();
 
-        // $logger = $this->get('logger');
+        $logger = $this->get('logger');
 
         // $intercept_params = ['rhelversion'];
         // $allparams = $this->extractRhDbQueryParamsArray($request);
@@ -198,15 +198,17 @@ class ApiController extends Controller
             )
         );
         if ($jsonrepr === null) {
+            $logger->warning("No CVRF found matching criteria", $params);
             return new JsonResponse(['data' => []]);
         }
 
-        // build list of all RHSA found out by CSRF criteria
+        // build list of all RHSA found out by CVRF criteria
         $allRhsa = array();
         foreach ($jsonrepr as $key => $value) {
             $arr = (array)$value;
             $allRhsa[] = $arr['RHSA'];
         }
+        $logger->debug("List of CVRF matching criteria", $allRhsa);
 
         $params = array();
         $filteredRhsaIds = array();
@@ -226,14 +228,16 @@ class ApiController extends Controller
                 $arr = json_decode(json_encode($jsonrepr), true);
                 $allRhsaData[$rhsa] = $arr;
 
+        $logger->debug("XXXXXXXX", $arr);
+
                 //
-                if (isset($arr['cvrfdoc']['triage_tree'])) {
-                    foreach ($arr['cvrfdoc']['triage_tree']['branch'] as $key => $prodbranch) {
-                        if ($prodbranch['type'] === 'triage Family' && strpos($prodbranch['name'], 'Red Hat Enterprise Linux') !== false) {
+                if (isset($arr['cvrfdoc']['product_tree'])) {
+                    foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
+                        if ($prodbranch['type'] === 'Product Family' && strpos($prodbranch['name'], 'Red Hat Enterprise Linux') !== false) {
                             if (gettype($prodbranch['branch']) === "array") {
                                 // $logger->error("YYYYY: ");
                                 foreach ($prodbranch['branch'] as $key => $prod) {
-                                    if (strpos($prod['full_triage_name'], 'Red Hat Enterprise Linux Server') !== false && strpos($prod['full_triage_name'], '(v. 7)') !== false) {
+                                    if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== false && strpos($prod['full_product_name'], '(v. 7)') !== false) {
                                         $filteredRhsaIds[] = $rhsa;
                                         break;
                                     }
@@ -241,7 +245,7 @@ class ApiController extends Controller
                             } else {
                                 // $logger->error("XXXXXX: ");
                                 foreach ($prodbranch['branch'] as $key => $prod) {
-                                    if (strpos($prod['full_triage_name'], 'Red Hat Enterprise Linux Server') !== false && strpos($prod['full_triage_name'], '(v. 7)') !== false) {
+                                    if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== false && strpos($prod['full_product_name'], '(v. 7)') !== false) {
                                         $filteredRhsaIds[] = $rhsa;
                                     }
                                 }
@@ -262,8 +266,8 @@ class ApiController extends Controller
             $resdata['severity'] = strtolower($rhsadata['cvrfdoc']['aggregate_severity']);
             $resdata['packages'] = array();
             $resdata['triage_state'] = 'ToDo';
-            if (isset($rhsadata['cvrfdoc']['triage_tree'])) {
-                foreach ($arr['cvrfdoc']['triage_tree']['branch'] as $key => $prodbranch) {
+            if (isset($rhsadata['cvrfdoc']['product_tree'])) {
+                foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
                     if ($prodbranch['type'] === 'triage Version') {
                         // $logger->error("PKGGGGGGGGGGG: ", array ($rpmversion, $prodbranch['name']));
 
@@ -271,7 +275,7 @@ class ApiController extends Controller
                             // $logger->error("RPMRPMRPMRPM: ");
                             $resdata['released_packages'][] = $prodbranch['name'];
                             // foreach ($prodbranch['branch'] as $key => $prod) {
-                            //     if (strpos($prod['full_triage_name'], 'Red Hat Enterprise Linux Server') !== false && strpos($prod['full_triage_name'], '(v. 7)') !== false) {
+                            //     if (strpos($prod['full_product_name'], 'Red Hat Enterprise Linux Server') !== false && strpos($prod['full_product_name'], '(v. 7)') !== false) {
                             //         $filteredRhsaIds[] = $rhsa;
                             //     }
                             // }
@@ -287,7 +291,7 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/api/rheltriage/{cvrf}",
+     * @Route("/api/rheltriage/{cvrf}", name="api_rheltriage_one",
      * requirements={"cvrf": "RH[BES]{1}A-\d{4}:\d{4}"})
      * @Method({"GET"})
      */
@@ -348,7 +352,7 @@ $logger->error("XXXXXXXXXX", array($errdate));
         $triage->setDecision($request->request->get('decision', 'ToDo'));
         $triage->setLastchange(new \DateTime('now'));
         $triage->setUser($request->request->get('user'));
-        $triage->setDeployprio($request->request->get('deployprio', 'Low'));
+        $triage->setDeployprio($request->request->get('deployprio', 'low'));
         $triage->setDomain($request->request->get('domain'));
         $triage->setRebootreq($request->request->get('rebootreq', false));
         $triage->setComment($request->request->get('comment'));

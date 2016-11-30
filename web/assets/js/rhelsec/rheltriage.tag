@@ -90,6 +90,9 @@
 
     <script>
 
+        this.erratadetailspage = null;
+        this.triageapi = null;
+        this.triageitpage = null;
         this.items = [];
         this.isLoading = false;
         this.error = null;
@@ -98,7 +101,7 @@
 
         convert2Apilink(rhsa) {
 
-            return '/gui/erratadetails/cvrf/' + rhsa;
+            return self.erratadetailspage + rhsa;
         }
 
         convertTriageState(state) {
@@ -107,7 +110,7 @@
 
         goToTriageItPage(cvrf) {
 
-            return '/gui/rheltriage/' + cvrf;
+            return self.triageitpage + cvrf;
         }
 
         doRhelGrab() {
@@ -120,7 +123,7 @@
 
         doApiRequest(criteria = null) {
 
-            var apiurl = "/api/rheltriage";
+            var apiurl = self.triageapi;
             if (criteria !== null && 0 !== criteria.length) {
                 apiurl += "?" + criteria;
             }
@@ -149,6 +152,14 @@
         }
 
         self.on('mount', function(){
+
+            var vpath = opts.erratadetailspage;
+            self.erratadetailspage = vpath.replace('RHSA-0000:0000', '');
+
+            vpath = opts.triageitpage;
+            self.triageitpage = vpath.replace('RHSA-0000:0000', '');
+
+            self.triageapi = opts.triageapi;
 
             $('.datepicker').datepicker({
                 format: 'yyyy/mm/dd',

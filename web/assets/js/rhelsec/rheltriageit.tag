@@ -116,6 +116,7 @@
     <script>
 
         this.cvrf = null;
+        this.triageitapi  = null;
         this.triagepage = null;
         this.data = [];
         this.isLoading = false;
@@ -146,7 +147,7 @@
 
         doApiGetRequest(cvrf) {
 
-            var apiurl = "/api/rheltriage/" + cvrf;
+            var apiurl = self.triageitapi; //"/api/rheltriage/" + cvrf;
 
             self.isLoading = true;
             self.update();
@@ -171,7 +172,7 @@
 
         doApiPostRequest(cvrf, jsondata) {
 
-            var apiurl = "/api/rheltriage/" + cvrf;
+            var apiurl = self.triageitapi ; //"/api/rheltriage/" + cvrf;
 
             self.isLoading = true;
             self.update();
@@ -197,10 +198,12 @@
 
         self.on('mount', function() {
 
+            self.cvrf = opts.cvrf;
+            self.triageitapi = opts.triageitapi;
+            self.triagepage = opts.triagepage;
+
             $('#idreboot').bootstrapToggle();
 
-            self.cvrf = opts.cvrf;
-            self.triagepage = opts.triagepage;
             self.doApiGetRequest(self.cvrf);
         })
 

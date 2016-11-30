@@ -30,6 +30,6 @@
     <script src="{{ asset('assets/js/rhelsec/rheltriage.tag') }}" type="riot/tag"></script>
 
     <script type="text/javascript">
-        riot.mount('rheltriage');
+        riot.mount('rheltriage', { erratadetailspage: "{{ path('gui_errata_cvrf_details_page', { 'rhsa': 'RHSA-0000:0000' }) }}", triageapi: "{{ path('api_rheltriage') }}", triageitpage: "{{ path('gui_triage_one_cfrf_page', { 'cvrf': 'RHSA-0000:0000' }) }}" });
     </script>
 {% endblock %}

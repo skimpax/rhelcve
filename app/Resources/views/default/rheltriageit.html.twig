@@ -33,7 +33,7 @@
 
 
     <script type="text/javascript">
-        riot.mount('rheltriageit', { cvrf: "{{ cvrf }}", triagepage: "{{ path('gui_triage_list_page') }}" });
+        riot.mount('rheltriageit', { cvrf: "{{ cvrf }}", triageitapi: "{{ path('api_rheltriage_one', { 'cvrf': cvrf }) }}", triagepage: "{{ path('gui_triage_list_page') }}" });
         riot.mount('scrolltotop');
     </script>
 {% endblock %}
