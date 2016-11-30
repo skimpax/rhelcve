@@ -228,9 +228,8 @@ class ApiController extends Controller
                 $arr = json_decode(json_encode($jsonrepr), true);
                 $allRhsaData[$rhsa] = $arr;
 
-        $logger->debug("XXXXXXXX", $arr);
+                // $logger->debug("CVRF content: ", $arr);
 
-                //
                 if (isset($arr['cvrfdoc']['product_tree'])) {
                     foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
                         if ($prodbranch['type'] === 'Product Family' && strpos($prodbranch['name'], 'Red Hat Enterprise Linux') !== false) {
@@ -285,6 +284,17 @@ class ApiController extends Controller
             }
             // append to results
             $results[] = $resdata;
+        }
+
+        // check whether some of these errata already have been triaged
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Triage');
+        foreach ($results as $key => $value) {
+            $cvrf = $value['RHSA'];
+            $res = $repo->findByErrata($cvrf);
+            if (!empty($res)) {
+                $logger->info('XXXX: ', array($res[0]->getDecision()));
+                $value['triage_state'] = $res[0]->getDecision();
+            }
         }
 
         return new JsonResponse(['data' => $results]);
