@@ -332,7 +332,14 @@ class ApiController extends Controller
             'released_packages' => [],
             'rhel_weblink' => $arr['cvrfdoc']['document_references']['reference'][0]['url'],
             ];
-            $logger->error(json_encode($data));
+
+            // this CVRF may already have been triaged, thus retrieve data about it
+            $triage = $this->fetchTriageDataFromDb($cvrf);
+            if ($triage !== null) {
+                //$data[] = (array) $triage;
+            }
+
+            $logger->debug(json_encode($data));
         }
 
         return new JsonResponse(['data' => $data]);
@@ -349,11 +356,9 @@ class ApiController extends Controller
         $logger->error("Params: ", $request->request->all());
         $repo = $this->getDoctrine()->getRepository('AppBundle:Triage');
         
-        $res = $repo->findByErrata($cvrf);
-        if (empty($res)) {
+        $triage = $this->fetchTriageDataFromDb($cvrf);
+        if ($triage === null) {
             $triage = new Triage();
-        } else {
-            $triage = $res[0];
         }
         
         $errdate = new \DateTime($request->request->get('erratadate'));
@@ -384,5 +389,16 @@ class ApiController extends Controller
         parse_str($qpstring, $qparray);
 
         return $qparray;
+    }
+
+    private function fetchTriageDataFromDb($cvrf)
+    {
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Triage');
+        
+        $res = $repo->findByErrata($cvrf);
+        if (!empty($res)) {
+            return $res[0];
+        }
+        return null;
     }
 }
