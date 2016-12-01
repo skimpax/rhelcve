@@ -265,7 +265,6 @@ class ApiController extends Controller
             $resdata['released_on'] = $rhsadata['cvrfdoc']['document_tracking']['current_release_date'];
             $resdata['severity'] = strtolower($rhsadata['cvrfdoc']['aggregate_severity']);
             $resdata['packages'] = array();
-            $resdata['triage_decision'] = 'unknown';
             if (isset($rhsadata['cvrfdoc']['product_tree'])) {
                 foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
                     if ($prodbranch['type'] === 'triage Version') {
@@ -292,10 +291,7 @@ class ApiController extends Controller
         foreach ($results as $key => $value) {
             $cvrf = $value['RHSA'];
             $res = $repo->findByErrata($cvrf);
-            if (!empty($res)) {
-                $logger->info('XXXX: ', array($res[0]->getDecision()));
-                $results[$key]['triage_decision'] = $res[0]->getDecision();
-            }
+            $results[$key]['triage_decision'] = (!empty($res)) ? $res[0]->getDecision() : 'unknown';
         }
 
         return new JsonResponse(['data' => $results]);
@@ -337,6 +333,11 @@ class ApiController extends Controller
             $triage = $this->fetchTriageDataFromDb($cvrf);
             if ($triage !== null) {
                 //$data[] = (array) $triage;
+                $arr = json_decode(json_encode($triage), true);
+                $logger->error('From DB', $arr);
+                $data[] = $arr;
+            } else{
+                $logger->error('Not found in DB');
             }
 
             $logger->debug(json_encode($data));
