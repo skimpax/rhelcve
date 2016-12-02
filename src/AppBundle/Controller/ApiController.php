@@ -291,7 +291,8 @@ class ApiController extends Controller
         foreach ($results as $key => $value) {
             $cvrf = $value['RHSA'];
             $res = $repo->findByErrata($cvrf);
-            $results[$key]['triage_decision'] = (!empty($res)) ? $res[0]->getDecision() : 'unknown';
+            //$results[$key]['triage_decision'] = (!empty($res)) ? $res[0]->getDecision() : 'unknown';
+            $results[$key]['triage_decision'] = ($res !== null) ? $res->getDecision() : 'unknown';
         }
 
         return new JsonResponse(['data' => $results]);
@@ -333,6 +334,9 @@ class ApiController extends Controller
             $triage = $this->fetchTriageDataFromDb($cvrf);
             if ($triage !== null) {
                 //$data[] = (array) $triage;
+                $logger->info("VARS: ", get_object_vars($triage));
+                $logger->info("QQQQQ ", array($triage));
+                $logger->info(json_encode($triage));
                 $arr = json_decode(json_encode($triage), true);
                 $logger->error('From DB', $arr);
                 $data[] = $arr;
@@ -397,9 +401,12 @@ class ApiController extends Controller
         $repo = $this->getDoctrine()->getRepository('AppBundle:Triage');
         
         $res = $repo->findByErrata($cvrf);
-        if (!empty($res)) {
-            return $res[0];
-        }
-        return null;
+        $logger = $this->get('logger');
+        $logger->info('AAAAAAAAAA: ', array($res));
+        return $res;
+        // if (!empty($res)) {
+        //     return $res[0];
+        // }
+        // return null;
     }
 }
