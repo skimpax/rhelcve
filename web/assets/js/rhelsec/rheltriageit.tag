@@ -111,7 +111,7 @@
                             <input type="hidden" name="erratadate" value={ data.released_on }>
                             <input type="hidden" name="user" value="clherieau">
                         </div>
-                        <button type="submit" class="btn btn-success">Apply</button>
+                        <button type="submit" class="btn btn-success center-block">Apply</button>
                     </form>
                 </div>
             </div>
