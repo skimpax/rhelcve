@@ -333,13 +333,6 @@ class ApiController extends Controller
             // this CVRF may already have been triaged, thus retrieve data about it
             $triage = $this->fetchTriageDataFromDb($cvrf);
             if ($triage !== null) {
-                //$data[] = (array) $triage;
-                // $logger->info("VARS: ", get_object_vars($triage));
-                // $logger->info("VARS: ", array($triage->getId(), $triage->getErrata(),$triage->getErratadate()));
-                // $logger->info("QQQQQ ", (array)$triage);
-                // $logger->info(json_encode($triage));
-                // $arr = json_decode(json_encode($triage), true);
-                // $logger->error('From DB', $arr);
                 $data['triage_lastchange'] = $triage->getLastchange();
                 $data['triage_decision'] = $triage->getDecision();
                 $data['triage_user'] = $triage->getUser();
@@ -382,7 +375,7 @@ class ApiController extends Controller
         $triage->setUser($request->request->get('user'));
         $triage->setDeployprio($request->request->get('deployprio', 'low'));
         $triage->setDomain($request->request->get('domain'));
-        $triage->setRebootreq($request->request->get('reboot', 'off') === 'on');
+        $triage->setRebootreq($request->request->get('rebootreq', 'off') === 'on');
         $triage->setComment($request->request->get('comment'));
 
         $repo->save($triage);

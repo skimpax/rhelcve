@@ -80,23 +80,23 @@
                     <form id="myform1" class="form" onsubmit={ doSubmit } action="#">
                         <div class="form-group">
                             <label for="iddecision">Decision:</label>
-                            <select id="iddecision" class="form-control" name="decision" value={ data.triage_decision } required>
-                                <option value="accept">Accept</option>
-                                <option value="reject">Reject</option>
-                                <option value="unknown">Don't Know</option>
+                            <select id="iddecision" class="form-control" name="decision" value={ data.triage_decision } disabled={ isdisabled } required>
+                                <option class="bg-success" value="accept">Accept</option>
+                                <option class="bg-danger" value="reject">Reject</option>
+                                <option class="bg-info"value="unknown">Don't Know</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="idcomment">Comment:</label>
-                            <textarea id="idcomment" class="form-control" name="comment" value={ data.triage_comment } placeholder="Some comment to explain the decision made" rows="3"></textarea>
+                            <textarea id="idcomment" class="form-control" name="comment" value={ data.triage_comment } placeholder="Some comment to explain the decision made" rows="3" disabled={ isdisabled }></textarea>
                         </div>
                         <div class="form-group">
                             <label for="iddomain">Domain:</label>
-                            <input type="text" class="form-control" name="domain" value={ data.triage_domain } placeholder="Indicate domain this errata applies to">
+                            <input type="text" class="form-control" name="domain" value={ data.triage_domain } placeholder="Indicate domain this errata applies to" disabled={ isdisabled }>
                         </div>
                         <div class="form-group">
                             <label for="idpriority">Deploy Priority:</label>
-                            <select id="idpriority" class="form-control" name="deployprio" value={ data.triage_deployprio }  required>
+                            <select id="idpriority" class="form-control" name="deployprio" value={ data.triage_deployprio } disabled={ isdisabled } required>
                                 <option class="bg-danger" value="high">High</option>
                                 <option class="bg-warning" value="medium">Medium</option>
                                 <option class="bg-info" value="low">Low</option>
@@ -104,16 +104,22 @@
                         </div>
                         <div class="form-group">
                             <label for="idreboot">Reboot Required:</label>
-                            <input id="idreboot" data-toggle="toggle" type="checkbox" data-on="Yes" data-off="No" data-onstyle="danger" data-offstyle="info" name="reboot" value={ data.triage_rebootreq } >
+                            <input id="idreboot" data-toggle="toggle" type="checkbox" data-on="Yes" data-off="No" data-onstyle="danger" data-offstyle="info" name="rebootreq" checked={ data.triage_rebootreq } disabled={ isdisabled }>
                         </div>
                         <div class="form-group">
                             <input type="hidden" name="errata" value={ data.RHSA }>
                             <input type="hidden" name="erratadate" value={ data.released_on }>
                             <input type="hidden" name="user" value="clherieau">
                         </div>
-                        <button type="submit" class="btn btn-success center-block">Apply</button>
+                        <virtual if={ isdisabled }>
+                            <button type="button" class="btn btn-primary center-block" onclick={ goToEditableMode }>Edit</button>
+                        </virtual>
+                        <virtual if={ !isdisabled }>
+                            <button type="submit" class="btn btn-success center-block">Apply</button>
+                        </virtual>
                     </form>
                 </div>
+                <hr>
             </div>
         </div>
         <div if={ data == null || data.length == 0 }>
@@ -124,6 +130,7 @@
 
     <script>
 
+        this.isdisabled = false;
         this.cvrf = null;
         this.triageitapi  = null;
         this.triagepage = null;
@@ -138,6 +145,22 @@
             return date.date.substring(0, date.date.length - 7) + " " + date.timezone;
         }
 
+        isEditable() {
+            return true;
+        }
+
+        evalRebootReq(isReq) {
+            console.log(isReq);
+            return isReq ? "on" : "off";
+        }
+
+        goToEditableMode() {
+
+            self.isdisabled = false;
+            self.update();
+            $('#idreboot').bootstrapToggle();
+        }
+
         doSubmit() {
 
             console.log($('#myform1').serialize());
@@ -146,9 +169,9 @@
             self.doApiPostRequest(self.cvrf, obj);
         }
 
-        getFormData($form) {
+        getFormData(form) {
 
-            var unindexed_array = $($form).serializeArray();
+            var unindexed_array = $(form).serializeArray();
             var indexed_array = {};
 
             $.map(unindexed_array, function(n, i){
@@ -179,13 +202,15 @@
             .always(function() {
                 // alert( "finished" );
                 self.isLoading = false;
-                self.update()
+                self.isdisabled = self.data.triage_lastchange !== undefined;
+                self.update();
+                $('#idreboot').bootstrapToggle();
             });
         }
 
         doApiPostRequest(cvrf, dataobj) {
 
-            var apiurl = self.triageitapi ; //"/api/rheltriage/" + cvrf;
+            var apiurl = self.triageitapi;
 
             self.isLoading = true;
             self.update();
@@ -193,7 +218,8 @@
             $.post(apiurl, dataobj, function(results) {
                 console.log(results);
                 alert("Triage successfuly done!");
-                window.location.replace(self.triagepage);
+                //window.location.replace(self.triagepage);
+                location.reload(true);
             })
             .done(function() {
             // alert( "second success" );
@@ -215,7 +241,7 @@
             self.triageitapi = opts.triageitapi;
             self.triagepage = opts.triagepage;
 
-            $('#idreboot').bootstrapToggle();
+            //$('#idreboot').bootstrapToggle();
 
             self.doApiGetRequest(self.cvrf);
         })
