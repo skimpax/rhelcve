@@ -60,7 +60,7 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
         // $res = $query->getResult();
 
         // return $res;
-        return $query->getOneOrNullResult();
+        return $query->setMaxResults(1)->getOneOrNullResult();
     }
 
     public function findByErrata($errata)
@@ -78,7 +78,7 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
 
         // return $res;
         
-        return $query->getOneOrNullResult();
+        return $query->setMaxResults(1)->getOneOrNullResult();
     }
 
     public function findAll($limit = 0, $offset = 0, $orderBy = array())

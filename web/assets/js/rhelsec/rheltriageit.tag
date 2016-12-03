@@ -72,10 +72,15 @@
             <h3>Triage Decision</h3>
             <div class="row">
                 <div class="col-md-10 col-md-offset-1">
+                    <!-- place a notification if already have been triaged -->
+                    <div class="alert alert-info" if={ data.triage_lastchange }>
+                        <h5>Was triaged on: <b>{ displayDate(data.triage_lastchange) }</b> by <b>{ data.triage_user }</b></h5>
+                    </div>
+
                     <form id="myform1" class="form" onsubmit={ doSubmit } action="#">
                         <div class="form-group">
                             <label for="iddecision">Decision:</label>
-                            <select id="iddecision" class="form-control" name="decision" required>
+                            <select id="iddecision" class="form-control" name="decision" value={ data.triage_decision } required>
                                 <option value="accept">Accept</option>
                                 <option value="reject">Reject</option>
                                 <option value="unknown">Don't Know</option>
@@ -83,15 +88,15 @@
                         </div>
                         <div class="form-group">
                             <label for="idcomment">Comment:</label>
-                            <textarea id="idcomment" class="form-control" name="comment" placeholder="Some comment to explain the decision made" rows="3"></textarea>
+                            <textarea id="idcomment" class="form-control" name="comment" value={ data.triage_comment } placeholder="Some comment to explain the decision made" rows="3"></textarea>
                         </div>
                         <div class="form-group">
                             <label for="iddomain">Domain:</label>
-                            <input type="text" class="form-control" name="domain" placeholder="Indicate domain this errata applies to">
+                            <input type="text" class="form-control" name="domain" value={ data.triage_domain } placeholder="Indicate domain this errata applies to">
                         </div>
                         <div class="form-group">
                             <label for="idpriority">Deploy Priority:</label>
-                            <select id="idpriority" class="form-control" name="deployprio" required>
+                            <select id="idpriority" class="form-control" name="deployprio" value={ data.triage_deployprio }  required>
                                 <option class="bg-danger" value="high">High</option>
                                 <option class="bg-warning" value="medium">Medium</option>
                                 <option class="bg-info" value="low">Low</option>
@@ -99,7 +104,7 @@
                         </div>
                         <div class="form-group">
                             <label for="idreboot">Reboot Required:</label>
-                            <input id="idreboot" data-toggle="toggle" type="checkbox" data-on="Yes" data-off="No" data-onstyle="danger" data-offstyle="info" name="reboot">
+                            <input id="idreboot" data-toggle="toggle" type="checkbox" data-on="Yes" data-off="No" data-onstyle="danger" data-offstyle="info" name="reboot" value={ data.triage_rebootreq } >
                         </div>
                         <div class="form-group">
                             <input type="hidden" name="errata" value={ data.RHSA }>
@@ -127,6 +132,11 @@
         this.error = null;
 
         var self = this
+
+        displayDate(date) {
+            //console.log(date);
+            return date.date.substring(0, date.date.length - 7) + " " + date.timezone;
+        }
 
         doSubmit() {
 
