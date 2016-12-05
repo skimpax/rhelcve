@@ -151,7 +151,7 @@
         }
 
         evalRebootReq(isReq) {
-            console.log(isReq);
+            // console.log(isReq);
             return isReq ? "on" : "off";
         }
 
@@ -190,7 +190,7 @@
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                console.log(results.data);
+                // console.log(results.data);
                 self.data = results.data;
             })
             .done(function() {
@@ -217,7 +217,7 @@
             self.update();
 
             $.post(apiurl, dataobj, function(results) {
-                console.log(results);
+                //console.log(results);
                 alert("Triage successfuly done!");
                 //window.location.replace(self.triagepage);
                 location.reload(true);

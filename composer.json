@@ -55,6 +55,10 @@
         "run": [
             "echo 'Started web server on http://localhost:9001'",
             "php bin/console server:run 127.0.0.1:9001 --env=dev"
+        ],
+        "runprod": [
+            "echo 'Started web server on http://localhost:9001'",
+            "php bin/console server:run 127.0.0.1:9001 --env=prod"
         ]
     },
     "extra": {
