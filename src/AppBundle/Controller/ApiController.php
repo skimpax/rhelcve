@@ -344,7 +344,7 @@ class ApiController extends Controller
                 $logger->error('Not found in DB');
             }
 
-            $logger->debug(json_encode($data));
+            // $logger->debug(json_encode($data));
         }
 
         return new JsonResponse(['data' => $data]);
@@ -358,7 +358,7 @@ class ApiController extends Controller
     public function postRhelTriageOneAction(Request $request, $cvrf)
     {
         $logger = $this->get('logger');
-        $logger->error("Params: ", $request->request->all());
+        $logger->debug("Params: ", $request->request->all());
         $repo = $this->getDoctrine()->getRepository('AppBundle:Triage');
         
         $triage = $this->fetchTriageDataFromDb($cvrf);
@@ -401,12 +401,6 @@ class ApiController extends Controller
         $repo = $this->getDoctrine()->getRepository('AppBundle:Triage');
         
         $res = $repo->findByErrata($cvrf);
-        $logger = $this->get('logger');
-        $logger->info('AAAAAAAAAA: ', array($res));
         return $res;
-        // if (!empty($res)) {
-        //     return $res[0];
-        // }
-        // return null;
     }
 }

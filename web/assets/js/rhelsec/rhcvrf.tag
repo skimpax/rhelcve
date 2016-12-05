@@ -6,10 +6,10 @@
         <form id="myform1" class="form-inline" onsubmit={ doRhelGrab } action="#">
             <div class="form-group">
                 <label for="iddateafter">Since Date:</label>
-                <div class="input-group date" data-provide="datepicker" data-date-format="yyyy-mm-dd">
+                <div id="iddatepicker" class="input-group date" data-provide="datepicker">
                     <input id="dateafter" type="text" class="form-control" name="after" required>
                     <div class="input-group-addon">
-                        <span class="glyphicon glyphicon-th"></span>
+                        <span class="glyphicon glyphicon-calendar"></span>
                     </div>
                 </div>
             </div>
@@ -129,9 +129,11 @@
 
         self.on('mount', function(){
 
-            $('.datepicker').datepicker({
-                format: 'yyyy/mm/dd',
-                startDate: '-1m'
+            $('#iddatepicker').datepicker({
+                autoclose: true,
+                clearBtn: true,
+                weekStart: 1,
+                format: 'yyyy-mm-dd'
             });
 
             // doApiRequest();

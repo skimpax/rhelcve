@@ -1,8 +1,6 @@
 <rheltriage>
-    <h3 class="text-primary">CVRF List</h3>
-
     <div>
-        <h4>Search Criteria  <small>in Red Hat security DB</small></h4>
+        <h4>CVRF Search Criteria  <small>in Red Hat security DB</small></h4>
         <form id="myform1" class="form-inline" onsubmit={ doRhelGrab } action="#">
             <div class="form-group">
                 <label for="iddateafter">Since Date:</label>
@@ -178,8 +176,7 @@
                 autoclose: true,
                 clearBtn: true,
                 weekStart: 1,
-                format: 'yyyy-mm-dd',
-                startDate: '-1m'
+                format: 'yyyy-mm-dd'
             });
         })
 

@@ -10,9 +10,10 @@
     <div if={ isLoading == false } >
 
         <h5 if={ rhdirectlink != null }>RH Direct Link: <a href="{ rhdirectlink }">{ rhdirectlink }</a></h5>
-        <pre if={ prettyjson != null } id="json">{ prettyjson }</pre>  
+        <br>
+        <div id="idjsonpanel1"></div>
 
-        <div if={ prettyjson == null || prettyjson.length == 0 }>
+        <div if={ purejson == null || purejson.length == 0 }>
             <div class="alert alert-info">No data retrieved.</div>
         </div>
     </div>
@@ -20,7 +21,7 @@
     <script>
 
         this.rhdirectlink = null;
-        this.prettyjson = null;
+        this.purejson = null;
         this.isLoading = false;
         this.error = null;
 
@@ -38,16 +39,16 @@
             }
 
             self.rhdirectlink = null;
-            self.prettyjson = null;
+            self.purejson = null;
             self.isLoading = true;
             self.error = null;
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                //console.log(results.data);
+                console.log(results.data);
                 if (results.data !== null) {
                     self.rhdirectlink = results.data.rhlink;
-                    self.prettyjson = JSON.stringify(results.data.jsondata, undefined, 2);
+                    self.purejson = results.data.jsondata;
                 }
             })
             .done(function() {
@@ -60,7 +61,11 @@
             .always(function() {
                 // alert( "finished" );
                 self.isLoading = false;
-                self.update()
+                self.update();
+
+                $('#idjsonpanel1').jsonView(
+                    self.purejson
+                );
             });
         }
 

@@ -97,6 +97,7 @@
                         <div class="form-group">
                             <label for="idpriority">Deploy Priority:</label>
                             <select id="idpriority" class="form-control" name="deployprio" value={ data.triage_deployprio } disabled={ isdisabled } required>
+                                <option class="bg-primary" value="notapplicable">N/A</option>
                                 <option class="bg-danger" value="high">High</option>
                                 <option class="bg-warning" value="medium">Medium</option>
                                 <option class="bg-info" value="low">Low</option>
