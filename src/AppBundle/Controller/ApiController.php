@@ -386,6 +386,26 @@ class ApiController extends Controller
         return new JsonResponse(['data' => $data]);
     }
 
+    /**
+     * @Route("/api/issueids", name="api_issueids_list")
+     * @Method({"GET"})
+     */
+    public function getIssueIdsAction(Request $request)
+    {
+        $logger = $this->get('logger');
+        $params = array();
+
+        $after = $request->query->get('after');
+
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Triage');
+        
+        $resp = $repo->findIssueIdErrataMap($after);
+
+        $logger->debug("IssueIDS: ", $resp);
+
+        return new JsonResponse(['data' => $resp]);
+    }
+
 
     private function extractRhDbQueryParamsArray(Request $request)
     {

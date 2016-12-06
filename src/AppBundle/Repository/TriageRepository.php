@@ -81,6 +81,7 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
         return $query->setMaxResults(1)->getOneOrNullResult();
     }
 
+
     public function findAll($limit = 0, $offset = 0, $orderBy = array())
     {
         //return $this->db->fetchAll("SELECT * FROM TeleinfoHpHc WHERE ");
@@ -105,6 +106,22 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
         return $statement->fetchAll();
     }
 
+    public function findAllByIssueId($issueid)
+    {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery(
+            'SELECT t
+            FROM AppBundle:Triage t
+            WHERE t.issueid = :issueid'
+        )
+        ->setParameter('issueid', $issueid);
+
+        $res = $query->getResult();
+
+        return $res;
+    }
+
     public function save(Triage $triage)
     {
         $em = $this->getEntityManager();
@@ -116,5 +133,20 @@ class TriageRepository extends \Doctrine\ORM\EntityRepository
         $em->flush();
 
         //return $triage->getId();
+    }
+
+    public function findIssueIdErrataMap($after = null)
+    {
+        $em = $this->getEntityManager();
+
+        $query = $em->createQuery(
+            'SELECT t.issueid,t.errata
+            FROM AppBundle:Triage t
+            GROUP BY t.issueid'
+        );
+
+        $res = $query->getResult();
+
+        return $res;
     }
 }

@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block header_content %}
+    {% embed ":default:header.html.twig" %}
+    {% endembed %}
+{% endblock %}
+
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datepicker3.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/datatables.min.css') }}" />
+{% endblock %}
+
+
+{% block main_content %}
+
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#" onclick="{ goTo('issueids') }">Issue IDs</a></li>
+      <li><a href="#" onclick="{ goTo('assignment') }">Assignent</a></li>
+      <li><a href="#" onclick="{ goTo('edit') }">Edit</a></li>
+    </ul>
+
+    <div id="issue"></div>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script src="{{ asset('assets/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datatables.min.js') }}"></script>
+
+    <script src="{{ asset('assets/js/rhelsec/rhissueids.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/js/rhelsec/rhissueidassign.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/js/rhelsec/rhissueedit.tag') }}" type="riot/tag"></script>
+
+    <script type="text/javascript">
+
+        var currentPage = null;
+
+        function goTo(path) {
+            if (currentPage) {
+                currentPage.unmount(true);
+            }
+
+            if (path === 'assignment') {
+                currentPage = riot.mount('div#issue', 'issueidassign')[0];
+            }
+            else if (path === 'edit' ) {
+                currentPage = riot.mount('div#issue', 'issueedit')[0];
+            }
+            else {
+                currentPage = riot.mount('div#issue', 'issueids')[0];
+            }
+        }
+        riot.route(goTo);
+        riot.route.exec();
+    </script>
+{% endblock %}

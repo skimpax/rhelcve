@@ -84,6 +84,11 @@ class Triage
      */
     private $comment;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="Issue")
+     * @ORM\JoinColumn(name="issue_id", referencedColumnName="id")
+     */
+    private $issueid;
 
     /**
      * Get id
@@ -310,4 +315,5 @@ class Triage
     {
         return $this->erratadate;
     }
+
 }
