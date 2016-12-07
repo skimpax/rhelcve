@@ -21,7 +21,7 @@
         <div class="form-group">
             <label for="idissue">Issue ID</label>
             <select id="idissue" class="form-control">
-                <virtual each="{ value, i in issueids }">
+                <virtual each="{ value, i in issues }">
                     <option>{ value.issueid }</option>
                 </virtual>
             </select>
@@ -38,55 +38,50 @@
     <div class="alert alert-warning" if={ error }>{ error }</div>
 
     <div if={ isLoading == false } >
-        <div if={ curissueid }>
-            <table id="cvrftable" class="table table-striped table-bordered" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Issue ID</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{ value.released_on }</td>
-                        <td>{ value.RHSA }</td>
-                        <td>{ value.title }</td>
-                        <td>{ value.severity }</td>
-                        <td>{ value.released_packages }</td>
-                        <td><a href="{ convert2Apilink(value.RHSA) }">link</a></td>
-                        <td>
-                            <virtual if={ value.triage_decision == 'unknown' }>
-                                <a class="btn btn-primary" href={ goToTriageItPage(value.RHSA) } role="button">Triage It!</a>
-                            </virtual>
-                            <virtual if={ value.triage_decision == 'accept' }>
-                                <a class="btn btn-success" href={ goToTriageItPage(value.RHSA) } role="button">Accepted</a>
-                            </virtual>
-                            <virtual if={ value.triage_decision == 'reject' }>
-                                <a class="btn btn-danger" href={ goToTriageItPage(value.RHSA) } role="button">Rejected</a>
-                            </virtual>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+        <div if={ issue }>
+            <form id="myform1" class="form" onsubmit={ doSubmit } action="#">
+                <div class="form-group">
+                    <label for="idissueid">Issue ID:</label>
+                    <input id="idissueid" type="text" class="form-control" name="issueid" value={ issue.issueid } placeholder="The Issue ID" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="idlocked">Locked:</label>
+                    <input id="idlocked" data-toggle="toggle" type="checkbox" data-on="Locked" data-off="Unlocked" data-onstyle="danger" data-offstyle="success" name="locked" checked={ issue.locked } disabled={ isdisabled }>
+                </div>
 
+                <virtual if={ isdisabled }>
+                    <button type="button" class="btn btn-primary center-block" onclick={ goToEditableMode }>Edit</button>
+                </virtual>
+                <virtual if={ !isdisabled }>
+                    <button type="submit" class="btn btn-success center-block">Apply</button>
+                </virtual>
+            </form>
         </div>
-        <div if={ issueids == null || issueids.length == 0 }>
+        <div if={ issues == null || issues.length == 0 }>
             <div class="alert alert-info">No Issue ID found.</div>
         </div>
     </div>
 
     <script>
 
-        this.issueids = [];
-        this.issueid = null;
+        this.issues = null;
+        this.issue = null;
         this.isLoading = false;
         this.error = null;
+        this.isdisabled = true;
 
         var self = this
 
         convert2Apilink(rhsa) {
 
             return '/gui/erratadetails/cvrf/' + rhsa;
+        }
+
+        goToEditableMode() {
+
+            self.isdisabled = false;
+            self.update();
+            $('#idlocked').bootstrapToggle();
         }
 
         doApply() {
@@ -130,10 +125,11 @@
             // }
 
             self.isLoading = true;
+            self.issues = null;
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                self.issueids = results.data;
+                self.issues = results.data;
                 console.log(results.data);
             })
             .done(function() {
@@ -159,11 +155,11 @@
             // }
 
             self.isLoading = true;
-            self.issueid = null;
+            self.issue = null;
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                self.issueid = results.data;
+                self.issue = results.data;
                 console.log(results.data);
             })
             .done(function() {
