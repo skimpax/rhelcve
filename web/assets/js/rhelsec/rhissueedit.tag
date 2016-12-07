@@ -17,19 +17,24 @@
         </form>
     </div> -->
 
-    <form id="myform1" class="form" onsubmit={ doApply } action="#">
-        <div class="form-group">
-            <label for="idissue">Issue ID</label>
-            <select id="idissue" class="form-control">
-                <virtual each="{ value, i in issues }">
-                    <option>{ value.issueid }</option>
-                </virtual>
-            </select>
+    <div type="row">
+        <div type>
+            <form id="myform1" class="form-inline" onsubmit={ doApply } action="#">
+                <div class="form-group">
+                    <label for="idissue">Issue ID</label>
+                    <select id="idissue" class="form-control">
+                        <virtual each="{ value, i in issues }">
+                            <option>{ value.issueid }</option>
+                        </virtual>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Edit</button>
+            </form>
+            <a class="btn btn-success" href={ goToCreate() } role="button">Create</a>
         </div>
-        <button type="submit" class="btn btn-primary">Edit</button>
-    </form>
+    </div>
     <hr>
-
+<div type="row">
     <div if={ isLoading } class='loader center-block'>
         <!-- <img src='puff.svg' /> -->
         <i class="fa fa-spinner fa-spin" style="font-size:36px"></i>
@@ -61,7 +66,7 @@
             <div class="alert alert-info">No Issue found.</div>
         </div>
     </div>
-
+</div>
     <script>
 
         this.issues = null;
