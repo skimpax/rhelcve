@@ -1,5 +1,5 @@
-<issueids>
-    <h3 class="text-primary">Issue IDs List</h3>
+<issueassign>
+    <h3 class="text-primary">Issue ID Assignment</h3>
 
     <div>
         <h4>Search Criteria</h4>
@@ -33,23 +33,25 @@
                 <thead>
                     <tr>
                         <!-- <th>Index</th> -->
-                        <th>Issue ID</th>
                         <th>Errata</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <!-- <th>Index</th> -->
-                        <th>Issue ID</th>
                         <th>Errata</th>
+                        <th>Action</th>
                     </tr>
                 </tfoot>
                 <tbody>
                     <tr each="{ value, i in items }">
                         <!-- <td>#{ i }</td> -->
-                        <td>{ value.issueid }</td>
                         <td>{ value.errata }</td>
-                        <!-- <td><a href="{ convert2Apilink(value.RHSA) }">link</a></td> -->
+                        <td>
+                            <input id="idreboot" data-toggle="toggle" type="checkbox" data-on="Assign" data-off="Not Assigned" data-onstyle="success" data-offstyle="info" name="assign_{ value.errata }">
+                            <a class="btn btn-primary" href={ doAssign(value.errata) } role="button">Assign It!</a>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -73,7 +75,7 @@
             return '/gui/erratadetails/cvrf/' + rhsa;
         }
 
-        doSubmit() {
+        doAssign() {
 
             var queryparams = $('#myform1').serialize();
             // console.log(queryparams);
@@ -81,9 +83,36 @@
             this.doApiRequest(queryparams);
         }
 
-        doApiRequest(criteria = null) {
+        doApiPostRequest(issueid, errata) {
 
-            var apiurl = "/api/issueids";
+            var apiurl = self.issueidapi;
+
+            self.isLoading = true;
+            self.update();
+
+            $.post(apiurl, dataobj, function(results) {
+                //console.log(results);
+                alert("Assignment successfuly done!");
+                //window.location.replace(self.triagepage);
+                //location.reload(true);
+            })
+            .done(function() {
+            // alert( "second success" );
+            })
+            .fail(function() {
+                // alert( "error" );
+                self.error = "Failed to send data to server!";
+            })
+            .always(function() {
+                // alert( "finished" );
+                self.isLoading = false;
+                self.update()
+            });
+        }
+
+        doApiRequest(issueid, errata) {
+
+            var apiurl = "/api/issueids/" + issueid;
             // if (criteria !== null && 0 !== criteria.length) {
             //     apiurl += "?" + criteria;
             // }
@@ -122,4 +151,4 @@
 
     </script>
 
-</issueids>
+</issueassign>

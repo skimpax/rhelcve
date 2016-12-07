@@ -1,6 +1,8 @@
 <?php
 
-namespace AppBundle\Repository\;
+namespace AppBundle\Repository;
+
+use AppBundle\Entity\Issue;
 
 /**
  * IssueRepository

@@ -106,11 +106,11 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/gui/issueid", name="gui_issueid_list_page")
+     * @Route("/gui/issueid", name="gui_issue_list_page")
      */
     public function rhelIssueIdListAction(Request $request)
     {
-        return $this->render('default/rhissueid.html.twig', [
+        return $this->render('default/rhissue.html.twig', [
             'base_dir' => realpath($this->getParameter('kernel.root_dir').'/..').DIRECTORY_SEPARATOR,
             ]);
     }

@@ -387,25 +387,44 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/api/issueids", name="api_issueids_list")
+     * @Route("/api/issues", name="api_issues_list")
      * @Method({"GET"})
      */
-    public function getIssueIdsAction(Request $request)
+    public function getIssuesAction(Request $request)
     {
         $logger = $this->get('logger');
         $params = array();
 
         $after = $request->query->get('after');
 
-        $repo = $this->getDoctrine()->getRepository('AppBundle:Triage');
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Issue');
         
-        $resp = $repo->findIssueIdErrataMap($after);
+        $resp = $repo->findAll();
 
         $logger->debug("IssueIDS: ", $resp);
 
         return new JsonResponse(['data' => $resp]);
     }
 
+    /**
+     * @Route("/api/issues", name="api_issues_create")
+     * @Method({"POST"})
+     */
+    public function createIssueAction(Request $request)
+    {
+        $logger = $this->get('logger');
+        $params = array();
+
+        $after = $request->query->get('after');
+
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Issue');
+        
+        $resp = $repo->findAll();
+
+        $logger->debug("IssueIDS: ", $resp);
+
+        return new JsonResponse(['data' => $resp]);
+    }
 
     private function extractRhDbQueryParamsArray(Request $request)
     {

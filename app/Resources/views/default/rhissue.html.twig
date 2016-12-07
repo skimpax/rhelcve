@@ -28,8 +28,8 @@
     <script src="{{ asset('assets/js/bootstrap-datepicker.min.js') }}"></script>
     <script src="{{ asset('assets/js/datatables.min.js') }}"></script>
 
-    <script src="{{ asset('assets/js/rhelsec/rhissueids.tag') }}" type="riot/tag"></script>
-    <script src="{{ asset('assets/js/rhelsec/rhissueidassign.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/js/rhelsec/rhissues.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/js/rhelsec/rhissueassign.tag') }}" type="riot/tag"></script>
     <script src="{{ asset('assets/js/rhelsec/rhissueedit.tag') }}" type="riot/tag"></script>
 
     <script type="text/javascript">
@@ -42,7 +42,7 @@
             }
 
             if (path === 'assignment') {
-                currentPage = riot.mount('div#issue', 'issueidassign')[0];
+                currentPage = riot.mount('div#issue', 'issueassign')[0];
             }
             else if (path === 'edit' ) {
                 currentPage = riot.mount('div#issue', 'issueedit')[0];

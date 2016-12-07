@@ -1,4 +1,4 @@
-<issueidassign>
+<issueedit>
     <h3 class="text-primary">Edit Issue ID</h3>
 
 <!--     <div>
@@ -58,7 +58,7 @@
             </form>
         </div>
         <div if={ issues == null || issues.length == 0 }>
-            <div class="alert alert-info">No Issue ID found.</div>
+            <div class="alert alert-info">No Issue found.</div>
         </div>
     </div>
 
@@ -119,7 +119,7 @@
 
         doApiGetAllIssues() {
 
-            var apiurl = "/api/issueids";
+            var apiurl = "/api/issues";
             // if (criteria !== null && 0 !== criteria.length) {
             //     apiurl += "?" + criteria;
             // }
@@ -149,7 +149,7 @@
 
         doApiGetIssueData(issueid) {
 
-            var apiurl = "/api/issueids/" + issueid;
+            var apiurl = "/api/issues/" + issueid;
             // if (criteria !== null && 0 !== criteria.length) {
             //     apiurl += "?" + criteria;
             // }
@@ -190,4 +190,4 @@
 
     </script>
 
-</issueidassign>
+</issueedit>
