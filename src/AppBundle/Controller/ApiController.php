@@ -393,17 +393,50 @@ class ApiController extends Controller
     public function getIssuesAction(Request $request)
     {
         $logger = $this->get('logger');
-        $params = array();
+        // $params = array();
 
-        $after = $request->query->get('after');
+        // $after = $request->query->get('after');
 
-        $repo = $this->getDoctrine()->getRepository('AppBundle:Issue');
+        // $repo = $this->getDoctrine()->getRepository('AppBundle:Issue');
         
-        $resp = $repo->findAll();
+        // $resp = $repo->findAll();
 
-        $logger->debug("IssueIDS: ", $resp);
+        // $logger->debug("IssueIDS: ", $resp);
 
-        return new JsonResponse(['data' => $resp]);
+        // return new JsonResponse(['data' => $resp]);
+        // 
+        // 
+        
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT c
+            FROM AppBundle:Issue c'
+        );
+        $issues = $query->getArrayResult();
+
+        return new JsonResponse($issues);
+    }
+
+        /**
+     * @Route("/api/issues/{id}", name="api_issues_details",
+     * requirements={"id": "[A-Z0-9_-]+"})
+     * @Method({"GET"})
+     */
+    public function getIssueDetailsAction(Request $request, $id)
+    {
+        $logger = $this->get('logger');
+
+        
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT c
+            FROM AppBundle:Issue c
+            WHERE c.id = :id'
+        )->setParameter('id', $id);
+
+        $issue = $query->getArrayResult();
+
+        return new JsonResponse($issue);
     }
 
     /**
@@ -415,15 +448,20 @@ class ApiController extends Controller
         $logger = $this->get('logger');
         $params = array();
 
-        $after = $request->query->get('after');
+        $issueid = $request->request->get('issueid');
 
-        $repo = $this->getDoctrine()->getRepository('AppBundle:Issue');
-        
-        $resp = $repo->findAll();
+        $logger->debug("issueid:", array($issueid));
 
-        $logger->debug("IssueIDS: ", $resp);
+        if ($issueid) {
 
-        return new JsonResponse(['data' => $resp]);
+            $repo = $this->getDoctrine()->getRepository('AppBundle:Issue');
+            
+            $resp = $repo->create($issueid);
+
+            $logger->debug("IssueIDS: ", array($resp));
+        }
+
+        return new JsonResponse(array());
     }
 
     private function extractRhDbQueryParamsArray(Request $request)

@@ -2,25 +2,15 @@
     <h3 class="text-primary">Edit Issue</h3>
 
     <div class="row">
-        <div class="pull-left">
-            <form id="myform1" class="form-inline" onsubmit={ doSelectIssue } action="#">
-                <div class="form-group">
-                    <label for="idissue">Issue ID</label>
-                    <select id="idissue" class="form-control">
-                        <virtual each="{ value, i in issues }">
-                            <option>{ value.issueid }</option>
-                        </virtual>
-                        <virtual if={ issues.length == 0 }>
-                            <option value="" disabled selected>No Issue yet</option>
-                        </virtual>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary" disabled={ issues.length == 0}>Edit</button>
-            </form>
-        </div>
-        <div class="pull-right">
-            <a class="btn btn-success" href={ doCreateIssue } role="button">Create</a>
-        </div>
+        <form id="idform1" class="form-inline" onsubmit={ doSelectIssue } action="#">
+            <div class="form-group">
+                <label for="idissue">Issue ID</label>
+                <select id="idissue" class="form-control" name="issue">
+                    <option value="" disabled selected>No Issue yet</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" disabled={ issues.length == 0}>Edit</button>
+        </form>
     </div>
     <hr>
     <div class="row">
@@ -33,10 +23,12 @@
 
         <div if={ isLoading == false } >
             <div if={ issue }>
-                <form id="myform1" class="form" onsubmit={ doSubmit } action="#">
+            <p> { issue.id  } { issue.issue }</p>
+            <p> { issue }</p>
+                <form id="idform2" class="form" onsubmit={ doUpdateIssue } action="#">
                     <div class="form-group">
                         <label for="idissueid">Issue ID:</label>
-                        <input id="idissueid" type="text" class="form-control" name="issueid" value={ issue.issueid } placeholder="The Issue ID" disabled>
+                        <input id="idissueid" type="text" class="form-control" name="issue" value={ issue.issue } placeholder="The Issue ID">
                     </div>
                     <div class="form-group">
                         <label for="idlocked">Locked:</label>
@@ -63,13 +55,38 @@
         this.issue = null;
         this.isLoading = false;
         this.error = null;
-        this.isdisabled = true;
+        this.isdisabled = false;
 
-        var self = this
+        var self = this;
 
         convert2Apilink(rhsa) {
 
             return '/gui/erratadetails/cvrf/' + rhsa;
+        }
+
+        getFormData(form) {
+
+            var unindexed_array = $(form).serializeArray();
+            var indexed_array = {};
+
+            $.map(unindexed_array, function(n, i){
+                indexed_array[n['name']] = n['value'];
+            });
+
+            return indexed_array;
+        }
+
+        updateSelectOptionsList() {
+
+            if (self.issues.length > 0) {
+
+                $('#idissue').empty();
+                $('#idissue').append(
+                    $.map(self.issues, function(el, i) {
+                        return $('<option>').val(el.id).text(el.issue)
+                    })
+                );
+            }
         }
 
         goToEditableMode() {
@@ -81,26 +98,29 @@
 
         doSelectIssue() {
 
-            var issue = $('#myform1').serialize();
-            // self.update();
-            self.doApiGetIssueData(issue);
+            var obj = self.getFormData('#idform1');
+            console.log(obj);
+
+            self.doApiGetIssueData(obj.issue);
+            $('#idlocked').bootstrapToggle();
         }
 
-        doCreateIssue() {
+        doUpdateIssue() {
 
-            var issue = $('#myform1').serialize();
-            // self.update();
-            self.doApiGetIssueData(issue);
+            var obj = self.getFormData('#idform2');
+            console.log(obj);
+
+            //self.doApiPutRequest(obj);
         }
 
-        doApiPostRequest(issueid, errata) {
+        doApiPutRequest(issueid, data) {
 
             var apiurl = self.issueidapi;
 
             self.isLoading = true;
             self.update();
 
-            $.post(apiurl, dataobj, function(results) {
+            $.put(apiurl, dataobj, function(results) {
                 //console.log(results);
                 alert("Assignment successfuly done!");
                 //window.location.replace(self.triagepage);
@@ -132,8 +152,8 @@
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                self.issues = results.data;
-                console.log(results.data);
+                self.issues = results;
+                console.log(self.issues);
             })
             .done(function() {
             // alert( "second success" );
@@ -145,7 +165,10 @@
             .always(function() {
                 // alert( "finished" );
                 self.isLoading = false;
-                self.update()
+                self.update();
+                self.updateSelectOptionsList();
+                // $('#idissue').change();
+                //$('#idissue').trigger('change');
                 // $('#cvrftable').DataTable();
             });
         }
@@ -162,8 +185,8 @@
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                self.issue = results.data;
-                console.log(results.data);
+                self.issue = results;
+                console.log(self.issue);
             })
             .done(function() {
             // alert( "second success" );
@@ -181,14 +204,10 @@
         }
 
         self.on('mount', function(){
-
-            // $('#iddatepicker').datepicker({
-            //     autoclose: true,
-            //     clearBtn: true,
-            //     weekStart: 1,
-            //     format: 'yyyy-mm-dd'
-            // });
+            // self.issues = [{"id":1,"issue":"VAM-001","locked":false}];
             self.doApiGetAllIssues();
+            // self.update();
+            // $('#idissue').change();
         })
 
     </script>

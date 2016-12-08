@@ -12,4 +12,28 @@ use AppBundle\Entity\Issue;
  */
 class IssueRepository extends \Doctrine\ORM\EntityRepository
 {
+
+	public function save(Issue $issue)
+    {
+        $em = $this->getEntityManager();
+
+        // tells Doctrine you want to (eventually) save the Triage (no queries yet)
+        $em->persist($issue);
+
+        // actually executes the queries (i.e. the INSERT query)
+        $em->flush();
+
+        //return $triage->getId();
+    }
+
+    public function create($issueid)
+    {
+        $em = $this->getEntityManager();
+
+        $issue = new Issue();
+        $issue->setIssue($issueid);
+        $issue->setLocked(false);
+
+        $this->save($issue);
+    }
 }

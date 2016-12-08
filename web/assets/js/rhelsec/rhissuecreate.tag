@@ -32,13 +32,13 @@
 
         <div class="alert alert-warning" if={ error }>{ error }</div>
 
-        <form id="myform1" class="form" onsubmit={ doSubmit } action="#">
+        <form id="idform1" class="form" onsubmit={ doSubmit } action="#">
             <div class="form-group">
                 <label for="idissueid">Issue ID:</label>
                 <input id="idissueid" type="text" class="form-control" name="issueid" value={ issue.issueid } placeholder="The Issue ID to create">
             </div>
             <div class="center-block">
-                <button type="button" class="btn btn-success" onclick={ doCreate }>Create</button>
+                <button type="button" class="btn btn-success" onclick={ doCreateIssue }>Create</button>
                 <button type="submit" class="btn btn-info" onclick={ doCancel }>Cancel</button>
             </div>
         </form>
@@ -55,9 +55,16 @@
 
         var self = this
 
-        convert2Apilink(rhsa) {
+        getFormData(form) {
 
-            return '/gui/erratadetails/cvrf/' + rhsa;
+            var unindexed_array = $(form).serializeArray();
+            var indexed_array = {};
+
+            $.map(unindexed_array, function(n, i){
+                indexed_array[n['name']] = n['value'];
+            });
+
+            return indexed_array;
         }
 
         goToEditableMode() {
@@ -69,28 +76,46 @@
 
         doSelectIssue() {
 
-            var issue = $('#myform1').serialize();
+            var issue = $('#idform1').serialize();
             // self.update();
             self.doApiGetIssueData(issue);
         }
 
         doCreateIssue() {
 
-            var issue = $('#myform1').serialize();
-            // self.update();
-            self.doApiGetIssueData(issue);
+            var issue = $('#idform1').serialize();
+            console.log(issue);
+            var alreadyExists = false;
+            if (self.issues.length > 0) {
+                console.log("issues !empty");
+
+                alreadyExists = self.issues.every(
+                    function(element, index, array) {
+                        return element.issueid == this;
+                    }, issue
+                );
+            }
+            if (alreadyExists === false) {
+                // self.update();
+                var obj = self.getFormData('#idform1');
+                self.doApiCreateIssue(obj);
+            }
+            else {
+                self.error = "This issue already exists!";
+            }
         }
 
-        doApiPostRequest(issueid, errata) {
+        doApiCreateIssue(data) {
 
-            var apiurl = self.issueidapi;
+            // var apiurl = self.issueidapi;
+            var apiurl = "/api/issues";
 
             self.isLoading = true;
             self.update();
 
-            $.post(apiurl, dataobj, function(results) {
+            $.post(apiurl, data, function(results) {
                 //console.log(results);
-                alert("Assignment successfuly done!");
+                alert("Issue creation successfuly done!");
                 //window.location.replace(self.triagepage);
                 //location.reload(true);
             })
@@ -176,7 +201,7 @@
             //     weekStart: 1,
             //     format: 'yyyy-mm-dd'
             // });
-            // self.doApiGetAllIssues();
+            self.doApiGetAllIssues();
         })
 
     </script>
