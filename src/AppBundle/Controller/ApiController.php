@@ -448,17 +448,17 @@ class ApiController extends Controller
         $logger = $this->get('logger');
         $params = array();
 
-        $issueid = $request->request->get('issueid');
+        $tag = $request->request->get('tag');
 
-        $logger->debug("issueid:", array($issueid));
+        $logger->debug("tag:", array($tag));
 
-        if ($issueid) {
+        if ($tag) {
 
             $repo = $this->getDoctrine()->getRepository('AppBundle:Issue');
             
-            $resp = $repo->create($issueid);
+            $resp = $repo->create($tag);
 
-            $logger->debug("IssueIDS: ", array($resp));
+            $logger->debug("Result: ", array($resp));
         }
 
         return new JsonResponse(array());

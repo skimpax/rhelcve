@@ -4,8 +4,8 @@
     <div class="row">
         <form id="idform1" class="form-inline" onsubmit={ doSelectIssue } action="#">
             <div class="form-group">
-                <label for="idissue">Issue ID</label>
-                <select id="idissue" class="form-control" name="issue">
+                <label for="idtag">Issue Tag</label>
+                <select id="idtag" class="form-control" name="id">
                     <option value="" disabled selected>No Issue yet</option>
                 </select>
             </div>
@@ -23,16 +23,17 @@
 
         <div if={ isLoading == false } >
             <div if={ issue }>
-            <p> { issue.id  } { issue.issue }</p>
-            <p> { issue }</p>
                 <form id="idform2" class="form" onsubmit={ doUpdateIssue } action="#">
                     <div class="form-group">
-                        <label for="idissueid">Issue ID:</label>
-                        <input id="idissueid" type="text" class="form-control" name="issue" value={ issue.issue } placeholder="The Issue ID">
+                        <label for="idissuetag">Issue Tag:</label>
+                        <input id="idissuetag" type="text" class="form-control" name="tag" value={ issue.tag }>
                     </div>
                     <div class="form-group">
                         <label for="idlocked">Locked:</label>
                         <input id="idlocked" data-toggle="toggle" type="checkbox" data-on="Locked" data-off="Unlocked" data-onstyle="danger" data-offstyle="success" name="locked" checked={ issue.locked } disabled={ isdisabled }>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" name="id" value={ issue.id }>
                     </div>
 
                     <virtual if={ isdisabled }>
@@ -80,10 +81,10 @@
 
             if (self.issues.length > 0) {
 
-                $('#idissue').empty();
-                $('#idissue').append(
+                $('#idtag').empty();
+                $('#idtag').append(
                     $.map(self.issues, function(el, i) {
-                        return $('<option>').val(el.id).text(el.issue)
+                        return $('<option>').val(el.id).text(el.tag)
                     })
                 );
             }
@@ -101,7 +102,7 @@
             var obj = self.getFormData('#idform1');
             console.log(obj);
 
-            self.doApiGetIssueData(obj.issue);
+            self.doApiGetIssueData(obj.id);
             $('#idlocked').bootstrapToggle();
         }
 
@@ -167,15 +168,15 @@
                 self.isLoading = false;
                 self.update();
                 self.updateSelectOptionsList();
-                // $('#idissue').change();
-                //$('#idissue').trigger('change');
+                // $('#idtag').change();
+                //$('#idtag').trigger('change');
                 // $('#cvrftable').DataTable();
             });
         }
 
-        doApiGetIssueData(issueid) {
+        doApiGetIssueData(id) {
 
-            var apiurl = "/api/issues/" + issueid;
+            var apiurl = "/api/issues/" + id;
             // if (criteria !== null && 0 !== criteria.length) {
             //     apiurl += "?" + criteria;
             // }
@@ -207,7 +208,7 @@
             // self.issues = [{"id":1,"issue":"VAM-001","locked":false}];
             self.doApiGetAllIssues();
             // self.update();
-            // $('#idissue').change();
+            // $('#idtag').change();
         })
 
     </script>

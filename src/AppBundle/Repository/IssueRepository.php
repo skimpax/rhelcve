@@ -23,17 +23,17 @@ class IssueRepository extends \Doctrine\ORM\EntityRepository
         // actually executes the queries (i.e. the INSERT query)
         $em->flush();
 
-        //return $triage->getId();
+        return $issue->getId();
     }
 
-    public function create($issueid)
+    public function create($tag)
     {
         $em = $this->getEntityManager();
 
         $issue = new Issue();
-        $issue->setIssue($issueid);
+        $issue->setTag($tag);
         $issue->setLocked(false);
 
-        $this->save($issue);
+        return $this->save($issue);
     }
 }

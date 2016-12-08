@@ -1,27 +1,5 @@
 <issuecreate>
     <h3 class="text-primary">Create Issue</h3>
-
-   <!--  <div class="row">
-        <div class="pull-left">
-            <form id="myform1" class="form-inline" onsubmit={ doSelectIssue } action="#">
-                <div class="form-group">
-                    <label for="idissue">Issue ID</label>
-                    <select id="idissue" class="form-control">
-                        <virtual each="{ value, i in issues }">
-                            <option>{ value.issueid }</option>
-                        </virtual>
-                        <virtual if={ issues.length == 0 }>
-                            <option value="" disabled selected>No Issue yet</option>
-                        </virtual>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary" disabled={ issues.length == 0}>Edit</button>
-            </form>
-        </div>
-        <div class="pull-right">
-            <a class="btn btn-success" href={ doCreateIssue } role="button">Create</a>
-        </div>
-    </div> -->
     <hr>
     <div class="row">
     <div class="col-md-3 col-md-offset-4">
@@ -34,8 +12,8 @@
 
         <form id="idform1" class="form" onsubmit={ doSubmit } action="#">
             <div class="form-group">
-                <label for="idissueid">Issue ID:</label>
-                <input id="idissueid" type="text" class="form-control" name="issueid" value={ issue.issueid } placeholder="The Issue ID to create">
+                <label for="idtag">Issue Tag:</label>
+                <input id="idtag" type="text" class="form-control" name="tag" placeholder="The Issue Tag to create">
             </div>
             <div class="center-block">
                 <button type="button" class="btn btn-success" onclick={ doCreateIssue }>Create</button>
@@ -77,31 +55,33 @@
         doSelectIssue() {
 
             var issue = $('#idform1').serialize();
-            // self.update();
+
             self.doApiGetIssueData(issue);
         }
 
         doCreateIssue() {
 
-            var issue = $('#idform1').serialize();
-            console.log(issue);
-            var alreadyExists = false;
+            var obj = self.getFormData('#idform1');
+
+            //var issue = $('#idform1').serialize();
+            console.log(obj.tag);
+            var notPresent = true;
             if (self.issues.length > 0) {
                 console.log("issues !empty");
 
-                alreadyExists = self.issues.every(
+                notPresent = self.issues.every(
                     function(element, index, array) {
-                        return element.issueid == this;
-                    }, issue
-                );
+                        console.log( element.tag);
+                        console.log(obj.tag);
+                        return element.tag != obj.tag;
+                    });
             }
-            if (alreadyExists === false) {
+            if (notPresent === true) {
                 // self.update();
-                var obj = self.getFormData('#idform1');
                 self.doApiCreateIssue(obj);
             }
             else {
-                self.error = "This issue already exists!";
+                self.error = "This issue tag already exists!";
             }
         }
 
@@ -145,8 +125,8 @@
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                self.issues = results.data;
-                console.log(results.data);
+                self.issues = results;
+                console.log(self.issues);
             })
             .done(function() {
             // alert( "second success" );
@@ -195,12 +175,6 @@
 
         self.on('mount', function(){
 
-            // $('#iddatepicker').datepicker({
-            //     autoclose: true,
-            //     clearBtn: true,
-            //     weekStart: 1,
-            //     format: 'yyyy-mm-dd'
-            // });
             self.doApiGetAllIssues();
         })
 

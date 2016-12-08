@@ -24,9 +24,9 @@ class Issue
     /**
      * @var string
      *
-     * @ORM\Column(name="issue", type="string", length=20, unique=true)
+     * @ORM\Column(name="tag", type="string", length=20, unique=true)
      */
-    private $issue;
+    private $tag;
 
     /**
      * @var bool
@@ -47,27 +47,27 @@ class Issue
     }
 
     /**
-     * Set issue
+     * Set tag
      *
-     * @param string $issue
+     * @param string $tag
      *
      * @return Issue
      */
-    public function setIssue($issue)
+    public function setTag($tag)
     {
-        $this->issue = $issue;
+        $this->tag = $tag;
 
         return $this;
     }
 
     /**
-     * Get issue
+     * Get tag
      *
      * @return string
      */
-    public function getIssue()
+    public function getTag()
     {
-        return $this->issue;
+        return $this->tag;
     }
 
     /**
