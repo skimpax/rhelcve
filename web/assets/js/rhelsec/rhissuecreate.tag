@@ -1,7 +1,7 @@
-<issueedit>
-    <h3 class="text-primary">Edit Issue</h3>
+<issuecreate>
+    <h3 class="text-primary">Create Issue</h3>
 
-    <div class="row">
+   <!--  <div class="row">
         <div class="pull-left">
             <form id="myform1" class="form-inline" onsubmit={ doSelectIssue } action="#">
                 <div class="form-group">
@@ -21,9 +21,10 @@
         <div class="pull-right">
             <a class="btn btn-success" href={ doCreateIssue } role="button">Create</a>
         </div>
-    </div>
+    </div> -->
     <hr>
     <div class="row">
+    <div class="col-md-3 col-md-offset-4">
         <div if={ isLoading } class='loader center-block'>
             <!-- <img src='puff.svg' /> -->
             <i class="fa fa-spinner fa-spin" style="font-size:36px"></i>
@@ -31,29 +32,16 @@
 
         <div class="alert alert-warning" if={ error }>{ error }</div>
 
-        <div if={ isLoading == false } >
-            <div if={ issue }>
-                <form id="myform1" class="form" onsubmit={ doSubmit } action="#">
-                    <div class="form-group">
-                        <label for="idissueid">Issue ID:</label>
-                        <input id="idissueid" type="text" class="form-control" name="issueid" value={ issue.issueid } placeholder="The Issue ID" disabled>
-                    </div>
-                    <div class="form-group">
-                        <label for="idlocked">Locked:</label>
-                        <input id="idlocked" data-toggle="toggle" type="checkbox" data-on="Locked" data-off="Unlocked" data-onstyle="danger" data-offstyle="success" name="locked" checked={ issue.locked } disabled={ isdisabled }>
-                    </div>
-
-                    <virtual if={ isdisabled }>
-                        <button type="button" class="btn btn-primary center-block" onclick={ goToEditableMode }>Edit</button>
-                    </virtual>
-                    <virtual if={ !isdisabled }>
-                        <button type="submit" class="btn btn-success center-block">Apply</button>
-                    </virtual>
-                </form>
+        <form id="myform1" class="form" onsubmit={ doSubmit } action="#">
+            <div class="form-group">
+                <label for="idissueid">Issue ID:</label>
+                <input id="idissueid" type="text" class="form-control" name="issueid" value={ issue.issueid } placeholder="The Issue ID to create">
             </div>
-            <div if={ issues == null || issues.length == 0 }>
-                <div class="alert alert-info">No Issue found.</div>
+            <div class="center-block">
+                <button type="button" class="btn btn-success" onclick={ doCreate }>Create</button>
+                <button type="submit" class="btn btn-info" onclick={ doCancel }>Cancel</button>
             </div>
+        </form>
         </div>
     </div>
 
@@ -188,9 +176,9 @@
             //     weekStart: 1,
             //     format: 'yyyy-mm-dd'
             // });
-            self.doApiGetAllIssues();
+            // self.doApiGetAllIssues();
         })
 
     </script>
 
-</issueedit>
+</issuecreate>
