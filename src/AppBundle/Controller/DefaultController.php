@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -72,6 +73,7 @@ class DefaultController extends Controller
     /**
      * @Route("/gui/erratadetails/oval/{rhsa}", name="gui_errata_oval_details_page",
      *  requirements={"rhsa": "RH[BES]A-\d{4}:\d{4}"}))
+     * @Method({"GET"})
      */
     public function getErrataOvalDetailsAction(Request $request, $rhsa)
     {
@@ -85,6 +87,7 @@ class DefaultController extends Controller
 
     /**
      * @Route("/gui/rheltriage", name="gui_triage_list_page")
+     * @Method({"GET"})
      */
     public function rhelTriageListAction(Request $request)
     {
@@ -96,6 +99,7 @@ class DefaultController extends Controller
     /**
      * @Route("/gui/rheltriage/{cvrf}", name="gui_triage_one_cfrf_page",
      * requirements={"cvrf": "RH[BES]{1}A-\d{4}:\d{4}"})
+     * @Method({"GET"})
      */
     public function rhelTriageOneAction(Request $request, $cvrf)
     {
@@ -106,7 +110,8 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/gui/issueid", name="gui_issue_list_page")
+     * @Route("/gui/issues", name="gui_issue_list_page")
+     * @Method({"GET"})
      */
     public function rhelIssueIdListAction(Request $request)
     {

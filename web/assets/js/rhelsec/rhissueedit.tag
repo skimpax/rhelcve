@@ -26,7 +26,7 @@
                 <form id="idform2" class="form" onsubmit={ doUpdateIssue } action="#">
                     <div class="form-group">
                         <label for="idissuetag">Issue Tag:</label>
-                        <input id="idissuetag" type="text" class="form-control" name="tag" value={ issue.tag }>
+                        <input id="idissuetag" type="text" class="form-control" name="tag" value={ issue.tag } disabled>
                     </div>
                     <div class="form-group">
                         <label for="idlocked">Locked:</label>
@@ -59,11 +59,6 @@
         this.isdisabled = false;
 
         var self = this;
-
-        convert2Apilink(rhsa) {
-
-            return '/gui/erratadetails/cvrf/' + rhsa;
-        }
 
         getFormData(form) {
 
@@ -111,21 +106,27 @@
             var obj = self.getFormData('#idform2');
             console.log(obj);
 
-            //self.doApiPutRequest(obj);
+            self.doApiPutRequest(obj);
         }
 
-        doApiPutRequest(issueid, data) {
+        doApiPutRequest(data) {
 
-            var apiurl = self.issueidapi;
+            // var apiurl = self.issueidapi;
+            var apiurl = '/api/issues/' + data.id;
 
             self.isLoading = true;
             self.update();
 
-            $.put(apiurl, dataobj, function(results) {
-                //console.log(results);
-                alert("Assignment successfuly done!");
-                //window.location.replace(self.triagepage);
-                //location.reload(true);
+            $.ajax({
+                type: "PUT",
+                url: apiurl,
+                data: data,
+                success: function(results) {
+                    //console.log(results);
+                    alert("Assignment successfuly done!");
+                    //window.location.replace(self.triagepage);
+                    //location.reload(true);
+                }
             })
             .done(function() {
             // alert( "second success" );
@@ -168,25 +169,19 @@
                 self.isLoading = false;
                 self.update();
                 self.updateSelectOptionsList();
-                // $('#idtag').change();
-                //$('#idtag').trigger('change');
-                // $('#cvrftable').DataTable();
             });
         }
 
         doApiGetIssueData(id) {
 
             var apiurl = "/api/issues/" + id;
-            // if (criteria !== null && 0 !== criteria.length) {
-            //     apiurl += "?" + criteria;
-            // }
 
             self.isLoading = true;
             self.issue = null;
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                self.issue = results;
+                self.issue = results[0];
                 console.log(self.issue);
             })
             .done(function() {
@@ -200,15 +195,12 @@
                 // alert( "finished" );
                 self.isLoading = false;
                 self.update()
-                // $('#cvrftable').DataTable();
             });
         }
 
         self.on('mount', function(){
-            // self.issues = [{"id":1,"issue":"VAM-001","locked":false}];
+
             self.doApiGetAllIssues();
-            // self.update();
-            // $('#idtag').change();
         })
 
     </script>

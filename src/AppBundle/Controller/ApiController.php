@@ -340,7 +340,7 @@ class ApiController extends Controller
                 $data['triage_domain'] = $triage->getDomain();
                 $data['triage_rebootreq'] = $triage->getRebootreq();
                 $data['triage_comment'] = $triage->getComment();
-            } else{
+            } else {
                 $logger->error('Not found in DB');
             }
 
@@ -404,8 +404,6 @@ class ApiController extends Controller
         // $logger->debug("IssueIDS: ", $resp);
 
         // return new JsonResponse(['data' => $resp]);
-        // 
-        // 
         
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
@@ -418,7 +416,7 @@ class ApiController extends Controller
     }
 
         /**
-     * @Route("/api/issues/{id}", name="api_issues_details",
+     * @Route("/api/issues/{id}", name="api_issues_details_one",
      * requirements={"id": "[A-Z0-9_-]+"})
      * @Method({"GET"})
      */
@@ -440,7 +438,7 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/api/issues", name="api_issues_create")
+     * @Route("/api/issues", name="api_issues_create_one")
      * @Method({"POST"})
      */
     public function createIssueAction(Request $request)
@@ -460,6 +458,39 @@ class ApiController extends Controller
 
             $logger->debug("Result: ", array($resp));
         }
+
+        return new JsonResponse(array());
+    }
+
+    /**
+     * @Route("/api/issues/{id}", name="api_issues_update_one",
+     * requirements={"id": "[A-Z0-9_-]+"})
+     * @Method({"PUT"})
+     */
+    public function updateIssueAction(Request $request, $id)
+    {
+        $err = array();
+        $logger = $this->get('logger');
+        $params = array();
+
+$logger->debug("Recvd: ", array($request->request));
+        $repo = $this->getDoctrine()->getRepository('AppBundle:Issue');
+            
+        $issue = $repo->getOneBy(array('id' => $id));
+        if (!$issue) {
+
+            $err['error'] = 'No issue found with id: '.$id;
+            return new JsonResponse($err, 404);
+        }
+        if ($issue->getTag() !== $request->request->get('tag')) {
+
+            $err['error'] = 'Your tag and stored tag do not match for id: '.$id;
+            return new JsonResponse($err, 404);
+        }
+
+        $newlocked = $request->request->get('locked', $issue->getLocked());
+        $issue->setLocked($newlocked);
+        $repo->save($issue);
 
         return new JsonResponse(array());
     }
