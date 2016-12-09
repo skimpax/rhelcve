@@ -1,5 +1,5 @@
 <issues>
-    <h3 class="text-primary">Issue IDs List</h3>
+    <h3 class="text-primary">Issues List</h3>
 
     <div>
         <h4>Search Criteria</h4>

@@ -14,7 +14,7 @@
 {% block main_content %}
 
     <ul class="nav nav-tabs">
-      <li class="active"><a href="#" onclick="{ goTo('issueids') }">Issue IDs</a></li>
+      <li class="active"><a href="#" onclick="{ goTo('issues') }">Issues</a></li>
       <li><a href="#" onclick="{ goTo('assignment') }">Assignent</a></li>
       <li><a href="#" onclick="{ goTo('edit') }">Edit</a></li>
       <li><a href="#" onclick="{ goTo('create') }">Create</a></li>
@@ -51,7 +51,7 @@
                 currentPage = riot.mount('div#issue', 'issuecreate')[0];
             }
             else {
-                currentPage = riot.mount('div#issue', 'issueids')[0];
+                currentPage = riot.mount('div#issue', 'issues')[0];
             }
         }
         riot.route(goTo);
