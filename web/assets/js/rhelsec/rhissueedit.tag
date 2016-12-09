@@ -26,10 +26,11 @@
                 <form id="idform2" class="form" onsubmit={ doUpdateIssue } action="#">
                     <div class="form-group">
                         <label for="idissuetag">Issue Tag:</label>
-                        <input id="idissuetag" type="text" class="form-control" name="tag" value={ issue.tag } disabled>
+                        <input id="idissuetag" type="text" class="form-control" name="tag" value={ issue.tag } disabled={ isdisabled } readonly>
                     </div>
                     <div class="form-group">
                         <label for="idlocked">Locked:</label>
+                        <input type='hidden' value='off' name='locked'>
                         <input id="idlocked" data-toggle="toggle" type="checkbox" data-on="Locked" data-off="Unlocked" data-onstyle="danger" data-offstyle="success" name="locked" checked={ issue.locked } disabled={ isdisabled }>
                     </div>
                     <div class="form-group">

@@ -444,7 +444,6 @@ class ApiController extends Controller
     public function createIssueAction(Request $request)
     {
         $logger = $this->get('logger');
-        $params = array();
 
         $tag = $request->request->get('tag');
 
@@ -471,12 +470,11 @@ class ApiController extends Controller
     {
         $err = array();
         $logger = $this->get('logger');
-        $params = array();
 
-$logger->debug("Recvd: ", array($request->request));
+        $logger->debug("Recvd: ", array($request->request));
         $repo = $this->getDoctrine()->getRepository('AppBundle:Issue');
             
-        $issue = $repo->getOneBy(array('id' => $id));
+        $issue = $repo->findOneBy(array('id' => $id));
         if (!$issue) {
 
             $err['error'] = 'No issue found with id: '.$id;
@@ -484,13 +482,16 @@ $logger->debug("Recvd: ", array($request->request));
         }
         if ($issue->getTag() !== $request->request->get('tag')) {
 
-            $err['error'] = 'Your tag and stored tag do not match for id: '.$id;
+            $err['error'] = 'Your tag and stored tag do not match for id: '.$id
+            . " yours: ".$request->request->get('tag')." stored: ".$issue->getTag();
             return new JsonResponse($err, 404);
         }
 
-        $newlocked = $request->request->get('locked', $issue->getLocked());
-        $issue->setLocked($newlocked);
-        $repo->save($issue);
+        $newlocked = $request->request->get('locked');
+        if ($newlocked !== null) {
+            $issue->setLocked($newlocked === 'on');
+            $repo->save($issue);
+        }
 
         return new JsonResponse(array());
     }
