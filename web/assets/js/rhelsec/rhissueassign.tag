@@ -1,7 +1,7 @@
 <issueassign>
-    <h3 class="text-primary">Issue ID Assignment</h3>
+    <h3 class="text-primary">Issue Assignment</h3>
 
-    <div>
+<!--     <div>
         <h4>Search Criteria</h4>
         <form id="myform1" class="form-inline" onsubmit={ doSubmit } action="#">
             <div class="form-group">
@@ -15,7 +15,7 @@
             </div>
             <button type="submit" class="btn btn-success">Apply</button>
         </form>
-    </div>
+    </div> -->
 
     <hr>
 
@@ -27,7 +27,7 @@
     <div class="alert alert-warning" if={ error }>{ error }</div>
 
     <div if={ isLoading == false } >
-        <div if={ items.length }>
+        <div if={ errata.length }>
 
             <table id="cvrftable" class="table table-striped table-bordered" width="100%" cellspacing="0">
                 <thead>
@@ -45,7 +45,7 @@
                     </tr>
                 </tfoot>
                 <tbody>
-                    <tr each="{ value, i in items }">
+                    <tr each="{ value, i in errata }">
                         <!-- <td>#{ i }</td> -->
                         <td>{ value.errata }</td>
                         <td>
@@ -57,14 +57,14 @@
             </table>
 
         </div>
-        <div if={ items == null || items.length == 0 }>
+        <div if={ errata == null || errata.length == 0 }>
             <div class="alert alert-info">No Issue ID found.</div>
         </div>
     </div>
 
     <script>
 
-        this.items = [];
+        this.errata = [];
         this.isLoading = false;
         this.error = null;
 
@@ -110,9 +110,9 @@
             });
         }
 
-        doApiRequest(issueid, errata) {
+        doApiGetAssignable() {
 
-            var apiurl = "/api/issueids/" + issueid;
+            var apiurl = "/api/triaged/accepted";
             // if (criteria !== null && 0 !== criteria.length) {
             //     apiurl += "?" + criteria;
             // }
@@ -121,7 +121,29 @@
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                self.items = results.data;
+                self.errata = results.data;
+                console.log(results.data);
+            })
+            .done(function() {
+            // alert( "second success" );
+            })
+            .fail(function() {
+                // alert( "error" );
+                self.error = "Failed to retrieve data from server!";
+            })
+            .always(function() {
+                // alert( "finished" );
+                self.isLoading = false;
+                self.update()
+                $('#cvrftable').DataTable();
+            });
+
+            apiurl = "/api/issues/unlocked";
+            self.isLoading = true;
+            self.update();
+
+            $.getJSON(apiurl, function(results) {
+                self.issues = results.data;
                 console.log(results.data);
             })
             .done(function() {
@@ -147,6 +169,8 @@
                 weekStart: 1,
                 format: 'yyyy-mm-dd'
             });
+
+            self.doApiGetAssignable();
         })
 
     </script>

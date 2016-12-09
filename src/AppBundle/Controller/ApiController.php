@@ -387,6 +387,26 @@ class ApiController extends Controller
     }
 
     /**
+     * @Route("/api/triaged/accepted", name="api_triage_accepted")
+     * @Method({"GET"})
+     */
+    public function getTriageAcceptedListAction(Request $request)
+    {
+        $decision = 'accept';
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT t
+            FROM AppBundle:Triage t
+            WHERE t.decision = :decision'
+        )->setParameter('decision', $decision);
+
+        $issue = $query->getArrayResult();
+
+        return new JsonResponse($issue);
+    }
+
+    /**
      * @Route("/api/issues", name="api_issues_list")
      * @Method({"GET"})
      */
@@ -415,7 +435,28 @@ class ApiController extends Controller
         return new JsonResponse($issues);
     }
 
-        /**
+    /**
+     * @Route("/api/issues/unlocked", name="api_issues_unlocked_list")
+     * @Method({"GET"})
+     */
+    public function getIssuesAcceptedAction(Request $request)
+    {
+        $logger = $this->get('logger');
+
+        $locked = false;
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT c
+            FROM AppBundle:Issue c
+            WHERE c.locked = :locked'
+        )->setParameter('locked', $locked);
+
+        $issues = $query->getArrayResult();
+
+        return new JsonResponse($issues);
+    }
+
+    /**
      * @Route("/api/issues/{id}", name="api_issues_details_one",
      * requirements={"id": "[A-Z0-9_-]+"})
      * @Method({"GET"})
