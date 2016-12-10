@@ -155,7 +155,7 @@
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                self.issues = results;
+                self.issues = results.data;
                 console.log(self.issues);
             })
             .done(function() {
@@ -182,7 +182,7 @@
             self.update();
 
             $.getJSON(apiurl, function(results) {
-                self.issue = results[0];
+                self.issue = results.data[0];
                 console.log(self.issue);
             })
             .done(function() {

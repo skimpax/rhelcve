@@ -17,6 +17,18 @@
         </form>
     </div> -->
 
+    <div class="row">
+        <form id="idform1" class="form-inline" onsubmit={ doSelectIssue } action="#">
+                <h5>Select the Issue Tag you will assign triaged errata</h5>
+            <div class="form-group">
+                <label for="idselissue">Issue Tag: </label>
+                <select id="idselissue" class="form-control" name="issueid">
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" disabled={ issues.length == 0}>Select</button>
+        </form>
+    </div>
+
     <hr>
 
     <div if={ isLoading } class='loader center-block'>
@@ -27,72 +39,111 @@
     <div class="alert alert-warning" if={ error }>{ error }</div>
 
     <div if={ isLoading == false } >
+        <h5>Triaged (accepted) errata not assigned to any issue yet:</h5>
         <div if={ errata.length }>
+            <br>
+            <div row>
+                <div class="col-md-6 col-md-offset-3"">
+                    <table id="assigntable" class="table table-striped table-bordered" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Errata</th>
+                                <th>Assign</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr each="{ value, i in errata }">
+                                <td>{ value.errata }</td>
+                                <td>
+                                    <input class="cerrata" data-errataid={ value.id } data-toggle="toggle" type="checkbox" data-on="Assign" data-off="Not Assigned" data-onstyle="success" data-offstyle="info" name="assign_{ value.errata }">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-            <table id="cvrftable" class="table table-striped table-bordered" width="100%" cellspacing="0">
-                <thead>
-                    <tr>
-                        <!-- <th>Index</th> -->
-                        <th>Errata</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <!-- <th>Index</th> -->
-                        <th>Errata</th>
-                        <th>Action</th>
-                    </tr>
-                </tfoot>
-                <tbody>
-                    <tr each="{ value, i in errata }">
-                        <!-- <td>#{ i }</td> -->
-                        <td>{ value.errata }</td>
-                        <td>
-                            <input id="idreboot" data-toggle="toggle" type="checkbox" data-on="Assign" data-off="Not Assigned" data-onstyle="success" data-offstyle="info" name="assign_{ value.errata }">
-                            <a class="btn btn-primary" href={ doAssign(value.errata) } role="button">Assign It!</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
+                    <a class="btn btn-success" onclick={ doApplyAssign } href="#" role="button">Apply</a>
+                </div>
+            </div>
         </div>
         <div if={ errata == null || errata.length == 0 }>
-            <div class="alert alert-info">No Issue ID found.</div>
+            <div class="alert alert-info">No unassigned accepted errata found.</div>
         </div>
     </div>
 
     <script>
 
         this.errata = [];
+        this.selissueid = null;
         this.isLoading = false;
         this.error = null;
 
         var self = this
 
-        convert2Apilink(rhsa) {
+        getFormData(form) {
 
-            return '/gui/erratadetails/cvrf/' + rhsa;
+            var unindexed_array = $(form).serializeArray();
+            var indexed_array = {};
+
+            $.map(unindexed_array, function(n, i){
+                indexed_array[n['name']] = n['value'];
+            });
+
+            return indexed_array;
         }
 
-        doAssign() {
+        updateSelectOptionsList() {
 
-            var queryparams = $('#myform1').serialize();
-            // console.log(queryparams);
+            if (self.issues.length > 0) {
 
-            this.doApiRequest(queryparams);
+                $('#idselissue').empty();
+                $('#idselissue').append(
+                    $.map(self.issues, function(el, i) {
+                        return $('<option>').val(el.id).text(el.tag)
+                    })
+                );
+            }
         }
 
-        doApiPostRequest(issueid, errata) {
+        getErrataToAssign() {
 
-            var apiurl = self.issueidapi;
+            var toassign = [];
+            var elems = document.getElementsByClassName("cerrata");
+            for (i = 0; i < elems.length; i++) {
+                if (elems[i].checked) {
+                    toassign.push(elems[i].dataset.errataid);
+                }
+            }
+            return toassign;
+        }
+
+        doSelectIssue() {
+
+            var obj = self.getFormData('#idform1');
+            self.selissueid = obj.issueid;
+        }
+
+        doApplyAssign() {
+
+            var errataids = self.getErrataToAssign();
+            console.log(errataids);
+
+            if (errataids.length > 0) {
+                var triageids = { 'triageids': errataids };
+                this.doApiPostAssignment(self.selissueid, triageids);
+            }
+        }
+
+        doApiPostAssignment(issueid, data) {
+
+            //var apiurl = self.issueidapi;
+            var apiurl =  "/api/issues/" + issueid + "/errata";
 
             self.isLoading = true;
             self.update();
 
-            $.post(apiurl, dataobj, function(results) {
+            $.post(apiurl, data, function(results) {
                 //console.log(results);
-                alert("Assignment successfuly done!");
+                alert("Errata ssignment successfuly done!");
                 //window.location.replace(self.triagepage);
                 //location.reload(true);
             })
@@ -112,33 +163,7 @@
 
         doApiGetAssignable() {
 
-            var apiurl = "/api/triaged/accepted";
-            // if (criteria !== null && 0 !== criteria.length) {
-            //     apiurl += "?" + criteria;
-            // }
-
-            self.isLoading = true;
-            self.update();
-
-            $.getJSON(apiurl, function(results) {
-                self.errata = results.data;
-                console.log(results.data);
-            })
-            .done(function() {
-            // alert( "second success" );
-            })
-            .fail(function() {
-                // alert( "error" );
-                self.error = "Failed to retrieve data from server!";
-            })
-            .always(function() {
-                // alert( "finished" );
-                self.isLoading = false;
-                self.update()
-                $('#cvrftable').DataTable();
-            });
-
-            apiurl = "/api/issues/unlocked";
+            var apiurl = "/api/issues/unlocked";
             self.isLoading = true;
             self.update();
 
@@ -157,7 +182,31 @@
                 // alert( "finished" );
                 self.isLoading = false;
                 self.update()
-                $('#cvrftable').DataTable();
+                self.updateSelectOptionsList();
+            });
+
+
+            apiurl = "/api/triaged/accepted";
+  
+            self.isLoading = true;
+            self.update();
+
+            $.getJSON(apiurl, function(results) {
+                self.errata = results.data;
+                console.log(results.data);
+            })
+            .done(function() {
+            // alert( "second success" );
+            })
+            .fail(function() {
+                // alert( "error" );
+                self.error = "Failed to retrieve data from server!";
+            })
+            .always(function() {
+                // alert( "finished" );
+                self.isLoading = false;
+                self.update()
+                // $('#cvrftable').DataTable();
             });
         }
 

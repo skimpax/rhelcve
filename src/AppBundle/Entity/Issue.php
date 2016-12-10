@@ -94,4 +94,3 @@ class Issue
         return $this->locked;
     }
 }
-

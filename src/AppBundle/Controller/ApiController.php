@@ -387,10 +387,10 @@ class ApiController extends Controller
     }
 
     /**
-     * @Route("/api/triaged/accepted", name="api_triage_accepted")
+     * @Route("/api/triaged/accepted", name="api_triage_accepted_not_assigned")
      * @Method({"GET"})
      */
-    public function getTriageAcceptedListAction(Request $request)
+    public function getTriageAcceptedNotAssignedListAction(Request $request)
     {
         $decision = 'accept';
 
@@ -398,12 +398,14 @@ class ApiController extends Controller
         $query = $em->createQuery(
             'SELECT t
             FROM AppBundle:Triage t
-            WHERE t.decision = :decision'
-        )->setParameter('decision', $decision);
+            WHERE t.decision = :decision AND t.issueid = :issueid'
+        )
+        ->setParameter('decision', $decision)
+        ->setParameter('issueid', null);
 
         $issue = $query->getArrayResult();
 
-        return new JsonResponse($issue);
+        return new JsonResponse(['data' => $issue]);
     }
 
     /**
@@ -432,14 +434,14 @@ class ApiController extends Controller
         );
         $issues = $query->getArrayResult();
 
-        return new JsonResponse($issues);
+        return new JsonResponse(['data' => $issues]);
     }
 
     /**
      * @Route("/api/issues/unlocked", name="api_issues_unlocked_list")
      * @Method({"GET"})
      */
-    public function getIssuesAcceptedAction(Request $request)
+    public function getIssuesUnlockedAction(Request $request)
     {
         $logger = $this->get('logger');
 
@@ -453,7 +455,7 @@ class ApiController extends Controller
 
         $issues = $query->getArrayResult();
 
-        return new JsonResponse($issues);
+        return new JsonResponse(['data' => $issues]);
     }
 
     /**
@@ -475,7 +477,7 @@ class ApiController extends Controller
 
         $issue = $query->getArrayResult();
 
-        return new JsonResponse($issue);
+        return new JsonResponse(['data' => $issue]);
     }
 
     /**
@@ -532,6 +534,58 @@ class ApiController extends Controller
         if ($newlocked !== null) {
             $issue->setLocked($newlocked === 'on');
             $repo->save($issue);
+        }
+
+        return new JsonResponse(array());
+    }
+
+    /**
+     * @Route("/api/issues/{id}/errata", name="api_issues_assign_erratae",
+     * requirements={"id": "\d+"})
+     * @Method({"POST"})
+     */
+    public function assignErrateToIssueAction(Request $request, $id)
+    {
+        $err = array();
+        $logger = $this->get('logger');
+
+        $logger->debug("Recvd: ", array($request->request));
+
+        $issuerepo = $this->getDoctrine()->getRepository('AppBundle:Issue');
+        $issue = $issuerepo->findOneBy(array('id' => $id));
+        if (!$issue) {
+
+            $err['error'] = 'No issue found with id: '.$id;
+            return new JsonResponse($err, 404);
+        }
+
+        $triageids = $request->request->get('triageids');
+        if (!$triageids || empty($triageids)) {
+
+            $err['error'] = 'No Triage IDs provided';
+            return new JsonResponse($err, 404);
+        }
+
+        $triagerepo = $this->getDoctrine()->getRepository('AppBundle:Triage');
+        $triages = $triagerepo->findBy(array('id' => $triageids));
+        if (!$triages || count($triages) != count($triageids)) {
+            $err['error'] = 'None or partial Triage IDs retrieved';
+            return new JsonResponse($err, 404);
+        }
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $em->getConnection()->beginTransaction(); // suspend auto-commit
+        try {
+            foreach ($triages as $key => $triage) {
+                $triage->setIssueid($issue);
+            }
+            $em->flush();
+            $em->getConnection()->commit();
+        } catch (Exception $e) {
+            $em->getConnection()->rollBack();
+            //throw $e;
+            $err['error'] = $e;
+            return new JsonResponse($err, 404);
         }
 
         return new JsonResponse(array());

@@ -316,4 +316,28 @@ class Triage
         return $this->erratadate;
     }
 
+
+    /**
+     * Set issueid
+     *
+     * @param \AppBundle\Entity\Issue $issueid
+     *
+     * @return Triage
+     */
+    public function setIssueid(\AppBundle\Entity\Issue $issueid = null)
+    {
+        $this->issueid = $issueid;
+
+        return $this;
+    }
+
+    /**
+     * Get issueid
+     *
+     * @return \AppBundle\Entity\Issue
+     */
+    public function getIssueid()
+    {
+        return $this->issueid;
+    }
 }

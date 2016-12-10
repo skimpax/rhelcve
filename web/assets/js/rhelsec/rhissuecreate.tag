@@ -2,7 +2,7 @@
     <h3 class="text-primary">Create Issue</h3>
     <hr>
     <div class="row">
-    <div class="col-md-3 col-md-offset-4">
+    <div class="col-md-4 col-md-offset-4">
         <div if={ isLoading } class='loader center-block'>
             <!-- <img src='puff.svg' /> -->
             <i class="fa fa-spinner fa-spin" style="font-size:36px"></i>
@@ -14,6 +14,7 @@
             <div class="form-group">
                 <label for="idtag">Issue Tag:</label>
                 <input id="idtag" type="text" class="form-control" name="tag" placeholder="The Issue Tag to create">
+                <span id="helpBlock" class="help-block">Acceptable characters: A-Z, a-z, 0-9, '-', '_'</span>
             </div>
             <div class="center-block">
                 <button type="button" class="btn btn-success" onclick={ doCreateIssue }>Create</button>
