@@ -141,6 +141,7 @@
             console.log(apiurl);
 
             self.isLoading = true;
+            self.error = null;
             self.update();
 
             $.getJSON(apiurl, function(results) {

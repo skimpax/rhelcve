@@ -187,6 +187,7 @@
             var apiurl = self.triageitapi; //"/api/rheltriage/" + cvrf;
 
             self.isLoading = true;
+            self.error = null;
             self.update();
 
             $.getJSON(apiurl, function(results) {
@@ -214,6 +215,7 @@
             var apiurl = self.triageitapi;
 
             self.isLoading = true;
+            self.error = null;
             self.update();
 
             $.post(apiurl, dataobj, function(results) {

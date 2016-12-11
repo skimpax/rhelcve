@@ -398,14 +398,74 @@ class ApiController extends Controller
         $query = $em->createQuery(
             'SELECT t
             FROM AppBundle:Triage t
-            WHERE t.decision = :decision AND t.issueid = :issueid'
+            WHERE t.decision = :decision AND t.issueid IS NULL'
         )
-        ->setParameter('decision', $decision)
-        ->setParameter('issueid', null);
+        ->setParameter('decision', $decision);
+        //->setParameter('issueid', NULL);
 
         $issue = $query->getArrayResult();
 
         return new JsonResponse(['data' => $issue]);
+    }
+
+    /**
+     * @Route("/api/triaged/assigned", name="api_triage_accepted_assigned")
+     * @Method({"GET"})
+     */
+    public function getTriageAcceptedAssignedListAction(Request $request)
+    {
+        $decision = 'accept';
+
+        $em = $this->getDoctrine()->getManager();
+        $query = $em->createQuery(
+            'SELECT i.tag,t.errata
+            FROM AppBundle:Triage t JOIN t.issueid i
+            WHERE t.decision = :decision AND t.issueid IS NOT NULL'
+        )
+        ->setParameter('decision', $decision);
+        //->setParameter('issueid', NULL);
+
+        $triages = $query->getArrayResult();
+
+        $logger = $this->get('logger');
+        $logger->debug("Params: ", $triages);
+
+        $res = [];
+        foreach ($triages as $key => $value) {
+            // $logger->debug($key);
+            // $logger->debug($value['tag']);
+            // $logger->debug($value['errata']);
+
+            $exist = false;
+            foreach ($res as $kres => $vres) {
+                // $logger->debug("AAA", $vres);
+                // $logger->debug("AAA", array($value['tag'], $value['errata']));
+                if ($vres['tag'] === $value['tag']) {
+                    $exist = true;
+                    $res[$kres]['errata'][] = $value['errata'];
+                    break;
+                }
+            }
+            if (!$exist) {
+                $tmp = [];
+                $tmp['tag'] = $value['tag'];
+                $tmp['errata'] = [];
+                $tmp['errata'][] = $value['errata'];
+                $res[] = $tmp;
+                // $logger->debug("BBB", $res);
+            }
+        }
+        $logger->debug("Grouped: ", $res);
+
+        // $res = [];
+        // foreach ($tmp as $key => $value) {
+        //     $jn['tag'] = $key;
+        //     $jn['errata'] = $value;
+        // }
+        // $logger->debug("Res: ", $res);
+
+
+        return new JsonResponse(['data' => $res]);
     }
 
     /**

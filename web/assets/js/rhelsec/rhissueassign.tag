@@ -44,7 +44,7 @@
             <br>
             <div row>
                 <div class="col-md-6 col-md-offset-3"">
-                    <table id="assigntable" class="table table-striped table-bordered" width="100%" cellspacing="0">
+                    <table id="assigntable" class="table table-striped table-bordered" width="100%" cellspacing="0" disabled={ applyable != true }>
                         <thead>
                             <tr>
                                 <th>Errata</th>
@@ -61,7 +61,7 @@
                         </tbody>
                     </table>
 
-                    <a class="btn btn-success" onclick={ doApplyAssign } href="#" role="button">Apply</a>
+                    <a class="btn btn-success" onclick={ doApplyAssign } href="#" role="button" disabled={ applyable != true }>Apply</a>
                 </div>
             </div>
         </div>
@@ -76,6 +76,7 @@
         this.selissueid = null;
         this.isLoading = false;
         this.error = null;
+        this.applyable = false;
 
         var self = this
 
@@ -120,16 +121,20 @@
 
             var obj = self.getFormData('#idform1');
             self.selissueid = obj.issueid;
+            self.applyable = true;
         }
 
         doApplyAssign() {
 
             var errataids = self.getErrataToAssign();
-            console.log(errataids);
+            // console.log(errataids);
 
             if (errataids.length > 0) {
                 var triageids = { 'triageids': errataids };
                 this.doApiPostAssignment(self.selissueid, triageids);
+            }
+            else {
+                self.error = "No errata checked for assignment!";
             }
         }
 
@@ -139,6 +144,7 @@
             var apiurl =  "/api/issues/" + issueid + "/errata";
 
             self.isLoading = true;
+            self.error = null;
             self.update();
 
             $.post(apiurl, data, function(results) {
@@ -165,11 +171,12 @@
 
             var apiurl = "/api/issues/unlocked";
             self.isLoading = true;
+            self.error = null;
             self.update();
 
             $.getJSON(apiurl, function(results) {
                 self.issues = results.data;
-                console.log(results.data);
+                //console.log(results.data);
             })
             .done(function() {
             // alert( "second success" );
@@ -193,7 +200,7 @@
 
             $.getJSON(apiurl, function(results) {
                 self.errata = results.data;
-                console.log(results.data);
+                //console.log(results.data);
             })
             .done(function() {
             // alert( "second success" );

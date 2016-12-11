@@ -32,22 +32,19 @@
             <table id="cvrftable" class="table table-striped table-bordered" width="100%" cellspacing="0">
                 <thead>
                     <tr>
-                        <!-- <th>Index</th> -->
-                        <th>Issue ID</th>
-                        <th>Errata</th>
+                        <th>Issue Tag</th>
+                        <th>Accepted Errata</th>
                     </tr>
                 </thead>
-                <tfoot>
+<!--                 <tfoot>
                     <tr>
-                        <!-- <th>Index</th> -->
                         <th>Issue ID</th>
                         <th>Errata</th>
                     </tr>
-                </tfoot>
+                </tfoot> -->
                 <tbody>
                     <tr each="{ value, i in items }">
-                        <!-- <td>#{ i }</td> -->
-                        <td>{ value.issueid }</td>
+                        <td>{ value.tag }</td>
                         <td>{ value.errata }</td>
                         <!-- <td><a href="{ convert2Apilink(value.RHSA) }">link</a></td> -->
                     </tr>
@@ -81,19 +78,20 @@
             this.doApiRequest(queryparams);
         }
 
-        doApiRequest(criteria = null) {
+        doApiGetRequest(criteria = null) {
 
-            var apiurl = "/api/issueids";
+            var apiurl = "/api/triaged/assigned";
             // if (criteria !== null && 0 !== criteria.length) {
             //     apiurl += "?" + criteria;
             // }
 
             self.isLoading = true;
+            self.error = false;
             self.update();
 
             $.getJSON(apiurl, function(results) {
                 self.items = results.data;
-                console.log(results.data);
+                console.log(self.items);
             })
             .done(function() {
             // alert( "second success" );
@@ -106,7 +104,7 @@
                 // alert( "finished" );
                 self.isLoading = false;
                 self.update()
-                $('#cvrftable').DataTable();
+                //$('#cvrftable').DataTable();
             });
         }
 
@@ -118,6 +116,8 @@
                 weekStart: 1,
                 format: 'yyyy-mm-dd'
             });
+
+            self.doApiGetRequest();
         })
 
     </script>
