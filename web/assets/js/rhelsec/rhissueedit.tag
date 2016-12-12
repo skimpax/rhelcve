@@ -37,12 +37,18 @@
                         <input type="hidden" name="id" value={ issue.id }>
                     </div>
 
-                    <virtual if={ isdisabled }>
-                        <button type="button" class="btn btn-primary center-block" onclick={ goToEditableMode }>Edit</button>
-                    </virtual>
-                    <virtual if={ !isdisabled }>
-                        <button type="submit" class="btn btn-success center-block">Apply</button>
-                    </virtual>
+                    <div class="text-center">
+                        <div class="btn-group" role="group">
+                            <virtual if={ isdisabled }>
+                                <button type="button" class="btn btn-success" onclick={ goToEditableMode }>Edit</button>
+                                <button type="button" class="btn btn-primary" onclick="history.back()">Cancel</button>
+                            </virtual>
+                            <virtual if={ !isdisabled }>
+                                <button type="submit" class="btn btn-success">Apply</button>
+                                <button type="button" class="btn btn-primary" onclick="history.back()">Cancel</button>
+                            </virtual>
+                        </div>
+                    </div>
                 </form>
             </div>
             <div if={ issues == null || issues.length == 0 }>

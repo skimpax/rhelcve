@@ -71,7 +71,7 @@
             <hr>
             <h3>Triage Decision</h3>
             <div class="row">
-                <div class="col-md-10 col-md-offset-1">
+                <div class="col-md-6 col-md-offset-3">
                     <!-- place a notification if already have been triaged -->
                     <div class="alert alert-info" if={ data.triage_lastchange }>
                         <h5>Was triaged on: <b>{ displayDate(data.triage_lastchange) }</b> by <b>{ data.triage_user }</b></h5>
@@ -112,12 +112,18 @@
                             <input type="hidden" name="erratadate" value={ data.released_on }>
                             <input type="hidden" name="user" value="clherieau">
                         </div>
-                        <virtual if={ isdisabled }>
-                            <button type="button" class="btn btn-primary center-block" onclick={ goToEditableMode }>Edit</button>
-                        </virtual>
-                        <virtual if={ !isdisabled }>
-                            <button type="submit" class="btn btn-success center-block">Apply</button>
-                        </virtual>
+                        <div class="text-center">
+                            <div class="btn-group" role="group">
+                                <virtual if={ isdisabled }>
+                                    <button type="button" class="btn btn-success" onclick={ goToEditableMode }>Edit</button>
+                                    <button type="button" class="btn btn-primary" onclick="history.back()">Cancel</button>
+                                </virtual>
+                                <virtual if={ !isdisabled }>
+                                    <button type="submit" class="btn btn-success">Apply</button>
+                                <button type="button" class="btn btn-primary" onclick="history.back()">Cancel</button>
+                                </virtual>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <hr>
