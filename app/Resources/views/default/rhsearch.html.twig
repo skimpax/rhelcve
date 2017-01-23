@@ -7,8 +7,8 @@
 
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datepicker3.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/datatables.min.css') }}" />
+    {# <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datepicker3.min.css') }}" /> #}
+    {# <link rel="stylesheet" href="{{ asset('assets/css/datatables.min.css') }}" /> #}
 {% endblock %}
 
 
@@ -25,12 +25,12 @@
 
 
 {% block javascripts %}
-    <script src="{{ asset('assets/js/bootstrap-datepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/js/datatables.min.js') }}"></script>
+    {# <script src="{{ asset('assets/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datatables.min.js') }}"></script> #}
 
-    <script src="{{ asset('assets/js/rhelsec/rhcvrf.tag') }}" type="riot/tag"></script>
-    <script src="{{ asset('assets/js/rhelsec/rhcve.tag') }}" type="riot/tag"></script>
-    <script src="{{ asset('assets/js/rhelsec/rhoval.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/tags/rhcvrf.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/tags/rhcve.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/tags/rhoval.tag') }}" type="riot/tag"></script>
 
     <script type="text/javascript">
 
