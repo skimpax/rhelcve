@@ -7,8 +7,8 @@
 
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-toggle.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datepicker3.min.css') }}" />
+    {# <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-toggle.min.css') }}" /> #}
+    {# <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datepicker3.min.css') }}" /> #}
 {% endblock %}
 
 
@@ -26,13 +26,13 @@
 
 
 {% block javascripts %}
-    <script src="{{ asset('assets/js/bootstrap-toggle.min.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap-datepicker.min.js') }}"></script>
+    {# <script src="{{ asset('assets/js/bootstrap-toggle.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap-datepicker.min.js') }}"></script> #}
 
-    <script src="{{ asset('assets/js/rhelsec/rhissues.tag') }}" type="riot/tag"></script>
-    <script src="{{ asset('assets/js/rhelsec/rhissueassign.tag') }}" type="riot/tag"></script>
-    <script src="{{ asset('assets/js/rhelsec/rhissueedit.tag') }}" type="riot/tag"></script>
-    <script src="{{ asset('assets/js/rhelsec/rhissuecreate.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/tags/rhissues.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/tags/rhissueassign.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/tags/rhissueedit.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/tags/rhissuecreate.tag') }}" type="riot/tag"></script>
 
     <script type="text/javascript">
 

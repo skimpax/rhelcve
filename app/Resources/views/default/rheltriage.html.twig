@@ -7,8 +7,8 @@
 
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datepicker3.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/datatables.min.css') }}" />
+    {# <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datepicker3.min.css') }}" /> #}
+    {# <link rel="stylesheet" href="{{ asset('assets/css/datatables.min.css') }}" /> #}
 {% endblock %}
 
 
@@ -24,10 +24,10 @@
 
 
 {% block javascripts %}
-    <script src="{{ asset('assets/js/bootstrap-datepicker.min.js') }}"></script>
-    <script src="{{ asset('assets/js/datatables.min.js') }}"></script>
+    {# <script src="{{ asset('assets/js/bootstrap-datepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/js/datatables.min.js') }}"></script> #}
 
-    <script src="{{ asset('assets/js/rhelsec/rheltriage.tag') }}" type="riot/tag"></script>
+    <script src="{{ asset('assets/tags/rheltriage.tag') }}" type="riot/tag"></script>
 
     <script type="text/javascript">
         riot.mount('rheltriage', { erratadetailspage: "{{ path('gui_errata_cvrf_details_page', { 'rhsa': 'RHSA-0000:0000' }) }}", triageapi: "{{ path('api_rheltriage') }}", triageitpage: "{{ path('gui_triage_one_cfrf_page', { 'cvrf': 'RHSA-0000:0000' }) }}" });

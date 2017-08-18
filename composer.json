@@ -19,6 +19,7 @@
             "Tests\\": "tests/"
         }
     },
+    "directory": "web/assets/vendors",
     "require": {
         "php": ">=5.5.9",
         "symfony/symfony": "3.1.*",

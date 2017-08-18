@@ -1,0 +1,29 @@
+{
+  "name": "rhelcve",
+  "description": "RHELCVE aims at triaging RedHat Enterpise Linux sucurity errata",
+  "homepage": "http://altran.com",
+  "authors": [
+    "Christophe Lherieau"
+  ],
+  "keywords": [
+    "redhat",
+    "security",
+    "errata"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "documentation"
+  ],
+  "dependencies": {
+    "jquery": "^3.1",
+    "jquery.json-view": "https://github.com/bazh/jquery.json-view.git#1911e52",
+    "bootstrap": "^3.3",
+    "bootstrap-datepicker": "^1.6",
+    "bootstrap-toggle": "^2.2",
+    "riot": "^3.0",
+    "font-awesome": "^4.7",
+    "datatables.net": "^1.10",
+    "datatables.net-bs": "^1.10"
+  }
+}
