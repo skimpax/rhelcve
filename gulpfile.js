@@ -35,6 +35,7 @@ gulp.task('js', function () {
         'bower_components/datatables.net/js/jquery.dataTables.js',
         'bower_components/datatables.net-bs/js/dataTables.bootstrap.js',
         'bower_components/riot/riot+compiler.js',
+        'bower_components/riot-route/dist/route.js',
         'app/Resources/public/js/**/*.js'
         ])
         .pipe(concat('javascript.js'))

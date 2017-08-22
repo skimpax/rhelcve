@@ -6841,12 +6841,11 @@ button.close {
 /*# sourceMappingURL=bootstrap.css.map */
 
 /*!
- * Datepicker for Bootstrap v1.6.4 (https://github.com/eternicode/bootstrap-datepicker)
+ * Datepicker for Bootstrap v1.7.1 (https://github.com/uxsolutions/bootstrap-datepicker)
  *
- * Copyright 2012 Stefan Petre
- * Improvements by Andrew Rowls
  * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)
  */
+
 .datepicker {
   border-radius: 4px;
   direction: ltr;
@@ -6854,10 +6853,13 @@ button.close {
 .datepicker-inline {
   width: 220px;
 }
-.datepicker.datepicker-rtl {
+.datepicker-rtl {
   direction: rtl;
 }
-.datepicker.datepicker-rtl table tr td span {
+.datepicker-rtl.dropdown-menu {
+  left: auto;
+}
+.datepicker-rtl table tr td span {
   float: right;
 }
 .datepicker-dropdown {
@@ -7486,6 +7488,10 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.focus {
 .datepicker tfoot tr th:hover {
   background: #eeeeee;
 }
+.datepicker .prev.disabled,
+.datepicker .next.disabled {
+  visibility: hidden;
+}
 .datepicker .cw {
   font-size: 10px;
   width: 12px;
@@ -7721,22 +7727,22 @@ div.dataTables_scrollHead table.dataTable {
   margin-bottom: 0 !important;
 }
 
-div.dataTables_scrollBody table {
+div.dataTables_scrollBody > table {
   border-top: none;
   margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
-div.dataTables_scrollBody table thead .sorting:after,
-div.dataTables_scrollBody table thead .sorting_asc:after,
-div.dataTables_scrollBody table thead .sorting_desc:after {
+div.dataTables_scrollBody > table > thead .sorting:after,
+div.dataTables_scrollBody > table > thead .sorting_asc:after,
+div.dataTables_scrollBody > table > thead .sorting_desc:after {
   display: none;
 }
-div.dataTables_scrollBody table tbody tr:first-child th,
-div.dataTables_scrollBody table tbody tr:first-child td {
+div.dataTables_scrollBody > table > tbody > tr:first-child > th,
+div.dataTables_scrollBody > table > tbody > tr:first-child > td {
   border-top: none;
 }
 
-div.dataTables_scrollFoot table {
+div.dataTables_scrollFoot > table {
   margin-top: 0 !important;
   border-top: none;
 }
