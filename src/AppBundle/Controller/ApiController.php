@@ -264,7 +264,7 @@ class ApiController extends Controller
             $resdata['title'] = $rhsadata['cvrfdoc']['document_title'];
             $resdata['released_on'] = $rhsadata['cvrfdoc']['document_tracking']['current_release_date'];
             $resdata['severity'] = strtolower($rhsadata['cvrfdoc']['aggregate_severity']);
-            $resdata['packages'] = array();
+            $resdata['released_packages'] = array();
             if (isset($rhsadata['cvrfdoc']['product_tree'])) {
                 foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {
                     if ($prodbranch['type'] === 'triage Version') {

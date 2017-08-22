@@ -56,7 +56,8 @@
                 currentPage = riot.mount('div#issue', 'issues')[0];
             }
         }
-        riot.route(goTo);
-        riot.route.exec();
+        route(goTo);
+        route.start();
+        route.exec();
     </script>
 {% endblock %}

@@ -51,7 +51,8 @@
                 currentPage = riot.mount('div#rhsecurity', 'rhcvrf')[0];
             }
         }
-        riot.route(goTo);
-        riot.route.exec();
+        route(goTo);
+        route.start();
+        route.exec();
     </script>
 {% endblock %}

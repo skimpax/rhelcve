@@ -65,7 +65,10 @@
                         <td>{ value.released_on }</td>
                         <td>{ value.RHSA }</td>
                         <td>{ value.severity }</td>
-                        <td>{ value.released_packages }</td>
+                        <!-- <td>{ value.released_packages }</td> -->
+                        <td>
+                            <virtual each="{ pkg, j in value.released_packages }">{ pkg }, </virtual>virtual
+                        </td>
                         <td><a href="{ convert2Apilink(value.RHSA) }">link</a></td>
                     </tr>
                 </tbody>
@@ -90,7 +93,9 @@
             return '/gui/erratadetails/cvrf/' + rhsa;
         }
 
-        doRhelGrab() {
+        doRhelGrab(e) {
+
+            e.preventDefault();
 
             var queryparams = $('#myform1').serialize();
             // console.log(queryparams);
@@ -113,7 +118,7 @@
                 console.log(results.data);
             })
             .done(function() {
-            // alert( "second success" );
+                // alert( "second success" );
             })
             .fail(function() {
                 // alert( "error" );
