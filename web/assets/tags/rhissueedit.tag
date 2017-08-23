@@ -99,7 +99,9 @@
             $('#idlocked').bootstrapToggle();
         }
 
-        doSelectIssue() {
+        doSelectIssue(e) {
+
+            e.preventDefault();
 
             var obj = self.getFormData('#idform1');
             console.log(obj);
@@ -108,7 +110,9 @@
             $('#idlocked').bootstrapToggle();
         }
 
-        doUpdateIssue() {
+        doUpdateIssue(e) {
+
+            e.preventDefault();
 
             var obj = self.getFormData('#idform2');
             console.log(obj);

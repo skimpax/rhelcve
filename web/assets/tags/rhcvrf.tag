@@ -65,9 +65,8 @@
                         <td>{ value.released_on }</td>
                         <td>{ value.RHSA }</td>
                         <td>{ value.severity }</td>
-                        <!-- <td>{ value.released_packages }</td> -->
                         <td>
-                            <virtual each="{ pkg, j in value.released_packages }">{ pkg }, </virtual>virtual
+                            <virtual each="{ pkg, j in value.released_packages }">{ pkg }, </virtual>
                         </td>
                         <td><a href="{ convert2Apilink(value.RHSA) }">link</a></td>
                     </tr>

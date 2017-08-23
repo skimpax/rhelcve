@@ -75,7 +75,9 @@
                         <td>{ value.RHSA }</td>
                         <td>{ value.title }</td>
                         <td>{ value.severity }</td>
-                        <td>{ value.released_packages }</td>
+                        <td>
+                            <virtual each="{ pkg, j in value.released_packages }">{ pkg }, </virtual>
+                        </td>
                         <td><a href="{ convert2Apilink(value.RHSA) }">link</a></td>
                         <td>
                             <virtual if={ value.triage_decision == 'unknown' }>
@@ -124,7 +126,9 @@
             return self.triageitpage + cvrf;
         }
 
-        doRhelGrab() {
+        doRhelGrab(e) {
+
+            e.preventDefault();
 
             var queryparams = $('#myform1').serialize();
             // console.log(queryparams);

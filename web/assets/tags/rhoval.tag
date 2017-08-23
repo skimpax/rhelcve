@@ -65,7 +65,9 @@
                         <td>{ value.released_on }</td>
                         <td>{ value.RHSA }</td>
                         <td>{ value.severity }</td>
-                        <td>{ value.CVEs }</td>
+                        <td>
+                            <virtual each="{ pkg, j in value.CVEs }">{ pkg }, </virtual>
+                        </td>
                         <!-- <td><a href="{ convert2Apilink(value.resource_url) }">link</a></td> -->
                         <td><a href="{ convert2Apilink(value.RHSA) }">link</a></td>
                     </tr>
@@ -96,7 +98,9 @@
             // return jsonlink.replace(/\.json$/, ".xml");
         }
 
-        doRhelGrab() {
+        doRhelGrab(e) {
+
+            e.preventDefault();
 
             var queryparams = $('#myform1').serialize();
             // console.log(queryparams);

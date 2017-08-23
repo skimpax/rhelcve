@@ -45,7 +45,9 @@
                 <tbody>
                     <tr each="{ value, i in items }">
                         <td>{ value.tag }</td>
-                        <td>{ value.errata }</td>
+                        <td>
+                            <virtual each="{ err, j in value.errata }">{ err }, </virtual>
+                        </td>
                         <!-- <td><a href="{ convert2Apilink(value.RHSA) }">link</a></td> -->
                     </tr>
                 </tbody>
@@ -70,7 +72,9 @@
             return '/gui/erratadetails/cvrf/' + rhsa;
         }
 
-        doSubmit() {
+        doSubmit(e) {
+
+            e.preventDefault();
 
             var queryparams = $('#myform1').serialize();
             // console.log(queryparams);

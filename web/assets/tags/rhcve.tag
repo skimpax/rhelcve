@@ -65,7 +65,9 @@
                         <td>{ value.public_date }</td>
                         <td>{ value.CVE }</td>
                         <td>{ value.severity }</td>
-                        <td>{ value.affected_packages }</td>
+                        <td>
+                            <virtual each="{ pkg, j in value.affected_packages }">{ pkg }, </virtual>
+                        </td>
                         <td><a href="{ convert2Apilink(value.CVE) }">link</a></td>
                     </tr>
                 </tbody>
@@ -95,7 +97,9 @@
             //return jsonlink.replace(/\.json$/, ".xml");
         }
 
-        doRhelGrab() {
+        doRhelGrab(e) {
+
+            e.preventDefault();
 
             var queryparams = $('#myform1').serialize();
             // console.log(queryparams);

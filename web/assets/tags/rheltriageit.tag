@@ -58,7 +58,9 @@
                     </tr>
                     <tr>
                         <td><b>Packages</b></td>
-                        <td>{ data.released_packages }</td>
+                        <td>
+                            <virtual each="{ pkg, j in value.released_packages }">{ pkg }, </virtual>
+                        </td>
                     </tr>
                     <tr>
                         <td><b>RHEL Link</b></td>
@@ -168,7 +170,9 @@
             $('#idreboot').bootstrapToggle();
         }
 
-        doSubmit() {
+        doSubmit(e) {
+
+            e.preventDefault();
 
             console.log($('#myform1').serialize());
 

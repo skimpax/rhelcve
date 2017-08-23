@@ -209,6 +209,7 @@ class ApiController extends Controller
             $allRhsa[] = $arr['RHSA'];
         }
         $logger->debug("List of CVRF matching criteria", $allRhsa);
+        $logger->debug("RHSA info: ", $jsonrepr);
 
         $params = array();
         $filteredRhsaIds = array();
@@ -228,7 +229,7 @@ class ApiController extends Controller
                 $arr = json_decode(json_encode($jsonrepr), true);
                 $allRhsaData[$rhsa] = $arr;
 
-                // $logger->debug("CVRF content: ", $arr);
+                //$logger->debug("CVRF content: ", $arr);
 
                 if (isset($arr['cvrfdoc']['product_tree'])) {
                     foreach ($arr['cvrfdoc']['product_tree']['branch'] as $key => $prodbranch) {

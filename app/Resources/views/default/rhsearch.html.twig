@@ -14,7 +14,7 @@
 
 {% block main_content %}
 
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" id="nav">
       <li class="active"><a href="#" onclick="{ goTo('cvrf') }">CVRF</a></li>
       <li><a href="#" onclick="{ goTo('cve') }">CVE</a></li>
       <li><a href="#" onclick="{ goTo('oval') }">OVAL</a></li>
@@ -40,6 +40,11 @@
             if (currentPage) {
                 currentPage.unmount(true);
             }
+
+            $('#nav li a').click(function() {
+                $('#nav li').removeClass('active');
+                $(this).parent().addClass('active');
+            });
 
             if (path === 'cve') {
                 currentPage = riot.mount('div#rhsecurity', 'rhcve')[0];
