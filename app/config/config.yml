@@ -10,49 +10,50 @@ parameters:
     api_caller.options:
         timeout: 10  # maximum transport + execution duration of the call in sec.
         ssl_verifypeer: false  # to stop cURL from verifying the peer's certificate.
-        useragent: "LeaseWeb API Caller"  # contents of the "User-Agent: " header.
+        useragent: 'LeaseWeb API Caller'  # contents of the "User-Agent: " header.
         followlocation: true  # to follow any "Location: " header that the server sends.
         # sslversion: 3  # set to 3 to avoid any bugs that relate to automatic version selection.
         fresh_connect: false  # set to true to force full reconnect every call.
 
 framework:
-    #esi:             ~
-    #translator:      { fallbacks: ["%locale%"] }
-    secret:          "%secret%"
+    #esi: ~
+    #translator: { fallbacks: ['%locale%'] }
+    secret: '%secret%'
     router:
-        resource: "%kernel.root_dir%/config/routing.yml"
+        resource: '%kernel.project_dir%/app/config/routing.yml'
         strict_requirements: ~
-    form:            ~
+    form: ~
     csrf_protection: ~
-    validation:      { enable_annotations: true }
-    #serializer:      { enable_annotations: true }
+    validation: { enable_annotations: true }
+    #serializer: { enable_annotations: true }
     templating:
         engines: ['twig']
-    default_locale:  "%locale%"
-    trusted_hosts:   ~
-    trusted_proxies: ~
+    default_locale: '%locale%'
+    trusted_hosts: ~
     session:
-        # http://symfony.com/doc/current/reference/configuration/framework.html#handler-id
-        handler_id:  session.handler.native_file
-        save_path:   "%kernel.root_dir%/../var/sessions/%kernel.environment%"
-    fragments:       ~
+        # https://symfony.com/doc/current/reference/configuration/framework.html#handler-id
+        handler_id: session.handler.native_file
+        save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
+    fragments: ~
     http_method_override: true
     assets: ~
+    php_errors:
+        log: true
 
 # Twig Configuration
 twig:
-    debug:            "%kernel.debug%"
-    strict_variables: "%kernel.debug%"
+    debug: '%kernel.debug%'
+    strict_variables: '%kernel.debug%'
 
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   pdo_mysql
-        host:     "%database_host%"
-        port:     "%database_port%"
-        dbname:   "%database_name%"
-        user:     "%database_user%"
-        password: "%database_password%"
+        driver: pdo_mysql
+        host: '%database_host%'
+        port: '%database_port%'
+        dbname: '%database_name%'
+        user: '%database_user%'
+        password: '%database_password%'
         #charset:  UTF8
         charset:  utf8mb4
         default_table_options:
@@ -60,20 +61,20 @@ doctrine:
             collate: utf8mb4_unicode_ci
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
-        #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
+        #     e.g. database_path: '%kernel.project_dir%/var/data/data.sqlite'
         #   2. Uncomment database_path in parameters.yml.dist
         #   3. Uncomment next line:
-        #     path:     "%database_path%"
+        #path: '%database_path%'
 
     orm:
-        auto_generate_proxy_classes: "%kernel.debug%"
+        auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore
         auto_mapping: true
 
 # Swiftmailer Configuration
 swiftmailer:
-    transport: "%mailer_transport%"
-    host:      "%mailer_host%"
-    username:  "%mailer_user%"
-    password:  "%mailer_password%"
-    spool:     { type: memory }
+    transport: '%mailer_transport%'
+    host: '%mailer_host%'
+    username: '%mailer_user%'
+    password: '%mailer_password%'
+    spool: { type: memory }
