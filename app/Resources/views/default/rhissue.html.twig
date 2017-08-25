@@ -1,19 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block header_content %}
-    {% embed ":default:header.html.twig" %}
-    {% endembed %}
-{% endblock %}
-
 
 {% block stylesheets %}
-
 {% endblock %}
 
 
 {% block main_content %}
 
-    <ul class="nav nav-tabs">
+    <ul class="nav nav-tabs" id="nav">
       <li class="active"><a href="#" onclick="{ goTo('issues') }">Issues</a></li>
       <li><a href="#" onclick="{ goTo('assignment') }">Assignent</a></li>
       <li><a href="#" onclick="{ goTo('edit') }">Edit</a></li>

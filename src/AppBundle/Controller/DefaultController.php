@@ -16,11 +16,11 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return $this->redirectToRoute('gui_rhdb_search', array(), 301);
+        return $this->redirectToRoute('gui_rhdb_search_page', array(), 301);
     }
 
     /**
-     * @Route("/gui/rhdbsearch", name="gui_rhdb_search")
+     * @Route("/gui/rhdbsearch", name="gui_rhdb_search_page")
      */
     public function getRhDbSearch(Request $request)
     {
