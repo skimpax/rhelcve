@@ -21,13 +21,9 @@
             {% block footer_content %}{% endblock %}
         </div>
 
-        {# <script src="{{ asset('assets/js/jquery-3.1.1.min.js') }}"></script>
-        <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
-        <script src="{{ asset('assets/js/riot+compiler.min.js') }}"></script>
-        <script src="{{ asset('assets/js/riot+compiler.min.js') }}"></script> #}
-
         <script src="{{ asset('assets/js/javascript.js') }}"></script>
 
         {% block javascripts %}{% endblock %}
+        {% block navbar_javascript %}{{ parent() }}{% endblock %}
     </body>
 </html>

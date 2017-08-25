@@ -3,10 +3,22 @@
 
 {% block navbar_content %}
     {# {% if is_granted('IS_AUTHENTICATED_FULLY') %} #}
-        <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav" id="navbar">
             <li class="active"><a href="{{ path('homepage') }}">RedHat Search<span class="sr-only">(current)</span></a></li>
             <li><a href="{{ path('gui_triage_list_page') }}">RHEL Triage</a></li>
             <li><a href="{{ path('gui_issue_list_page') }}">Issues</a></li>
         </ul>
     {# {% endif %} #}
+{% endblock %}
+
+
+{% block navbar_javascript %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#navbar li a').click(function() {
+                $('#navbar li').removeClass('active');
+                $(this).parent().addClass('active');
+            });
+        });
+    </script>
 {% endblock %}
