@@ -27,18 +27,18 @@ gulp.task('tags', function() {
 // JAVASCRIPT TASK: write one minified js file out of jquery.js, bootstrap.js and all of my custom js files
 gulp.task('js', function () {
     return gulp.src([
-        'bower_components/jquery/dist/jquery.js',
-        'bower_components/jquery.json-view/dist/jquery.json-view.js',
-        'bower_components/bootstrap/dist/js/bootstrap.js',
-        'bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.js',
-        'bower_components/bootstrap-toggle/js/bootstrap-toggle.js',
-        'bower_components/datatables.net/js/jquery.dataTables.js',
-        'bower_components/datatables.net-bs/js/dataTables.bootstrap.js',
-        'bower_components/riot/riot+compiler.js',
-        'bower_components/riot-route/dist/route.js',
+        'bower_components/jquery/dist/jquery.min.js',
+        'bower_components/jquery.json-view/dist/jquery.json-view.min.js',
+        'bower_components/bootstrap/dist/js/bootstrap.min.js',
+        'bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
+        'bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js',
+        'bower_components/datatables.net/js/jquery.dataTables.min.js',
+        'bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js',
+        'bower_components/riot/riot+compiler.min.js',
+        'bower_components/riot-route/dist/route.min.js',
         'app/Resources/public/js/**/*.js'
         ])
-        .pipe(concat('javascript.js'))
+        .pipe(concat('javascripts.js'))
         .pipe(gulpif(env === 'prod', uglify()))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('web/assets/js'));
@@ -47,12 +47,12 @@ gulp.task('js', function () {
 // CSS TASK: write one minified css file out of bootstrap.less and all of my custom less files
 gulp.task('css', function () {
     return gulp.src([
-        'bower_components/jquery.json-view/dist/jquery.json-view.css',
-        'bower_components/bootstrap/dist/css/bootstrap.css',
-        'bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
-        'bower_components/bootstrap-toggle/css/bootstrap-toggle.css',
-        'bower_components/datatables.net-bs/css/dataTables.bootstrap.css',
-        'bower_components/font-awesome/css/font-awesome.css',
+        'bower_components/jquery.json-view/dist/jquery.json-view.min.css',
+        'bower_components/bootstrap/dist/css/bootstrap.min.css',
+        'bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css',
+        'bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css',
+        'bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css',
+        'bower_components/font-awesome/css/font-awesome.min.css',
         'app/Resources/public/less/**/*.less'
         ])
         .pipe(gulpif(/[.]less/, less()))
