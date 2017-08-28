@@ -21,7 +21,7 @@ Issues can be created and (accepted) errata associated to it.
 * bower
 * mysql
 
-#### Installation
+#### Tools installation
 ```bash
 # install nodejs
 apt-get install nodejs
@@ -46,6 +46,22 @@ npm install -g jshint
 npm install --global bower
 ```
 
+#### Install/update project dependancies
+
+**First time install:**
+
+Install all the project dependencies, as stated in composer.json file:
+```bash
+composer install
+```
+
+**Update regularly:**
+
+Launch regularly this command to get latest symphony and extensions packages:
+```bash
+composer update
+```
+
 ### Database
 
 The simplest way is to use the Symfony console commands dedicated to database domain (handled by Doctrine).
@@ -57,9 +73,10 @@ php bin/console doctrine:database:create
 # declare/create the tables in the database
 php bin/console doctrine:schema:update --force
 ```
-The tables inside are auto-created via Symfony shell commands:
+
 ### Run in dev mode
 
+Launch a minimal php web server for development purpose only:
 ```bash
 composer run
 ```
